@@ -4,6 +4,7 @@ import {
   EnvFlightProvider,
   EnvHotelProvider,
 } from "@/lib/providers/env-adapters";
+import { isAmadeusConfigured } from "@/lib/providers/amadeus/config";
 import type {
   AirportAutocompleteProvider,
   CarRentalProvider,
@@ -38,14 +39,16 @@ export function providerStatus(configured: boolean): ProviderStatus {
 }
 
 export function getTravelProviderStatuses() {
+  const amadeus = isAmadeusConfigured();
   return {
-    flight: providerStatus(flightProvider.isConfigured()),
-    hotel: providerStatus(hotelProvider.isConfigured()),
-    car: providerStatus(carProvider.isConfigured()),
+    flight: providerStatus(amadeus),
+    hotel: providerStatus(amadeus),
+    car: providerStatus(amadeus),
     airports: providerStatus(airportProvider.isConfigured()),
     activity: "not_configured" as ProviderStatus,
     openai: providerStatus(Boolean(process.env.OPENAI_API_KEY?.trim())),
     stripe: providerStatus(Boolean(process.env.STRIPE_SECRET_KEY?.trim())),
+    amadeus: providerStatus(amadeus),
   };
 }
 

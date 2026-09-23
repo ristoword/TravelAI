@@ -18,25 +18,15 @@ export async function GET(request: Request) {
   }
 
   const provider = getAirportAutocompleteProvider();
-  if (!provider.isConfigured()) {
-    return apiSuccess(
-      {
-        status: "autocomplete_not_configured",
-        message:
-          "Autocomplete aeroporti non configurato. Nessuna città o aeroporto inventato. Digita il codice IATA o il nome manualmente.",
-        suggestions: [] as const,
-      },
-      200,
-      requestId,
-    );
-  }
-
   const result = await provider.suggest(parsed.data.q);
   if (!result.ok) {
     return apiSuccess(
       {
         status: result.code,
-        message: result.message,
+        message:
+          result.code === "unavailable" || result.code === "provider_error"
+            ? "Autocomplete aeroporti: servizio non disponibile. Digita il codice IATA manualmente."
+            : result.message,
         suggestions: [] as const,
       },
       200,

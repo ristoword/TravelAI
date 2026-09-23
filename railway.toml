@@ -6,8 +6,9 @@ builder = "NIXPACKS"
 buildCommand = "npm run build"
 
 [deploy]
-# Railway injects PORT; bind all interfaces for the public proxy
-startCommand = "npx next start -H 0.0.0.0 -p ${PORT:-3000}"
+# Migrate against private DATABASE_URL, then start (private networking available at runtime).
+# Railway injects PORT; bind all interfaces for the public proxy.
+startCommand = "npx prisma migrate deploy && npx next start -H 0.0.0.0 -p ${PORT:-3000}"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"

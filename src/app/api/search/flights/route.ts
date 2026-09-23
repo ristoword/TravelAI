@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       {
         status: "provider_not_configured",
         message:
-          "Servizio non disponibile. Provider voli non configurato (FLIGHT_PROVIDER_API_KEY, FLIGHT_PROVIDER_BASE_URL).",
+          "Servizio non disponibile. Provider voli non configurato (AMADEUS_CLIENT_ID, AMADEUS_CLIENT_SECRET).",
         offers: [] as const,
         meta: {
           origin: parsed.data.origin,

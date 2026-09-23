@@ -52,6 +52,7 @@ export async function GET() {
         car: providers.car,
         activity: providers.activity,
         airports: providers.airports,
+        amadeus: providers.amadeus,
         openai: providers.openai,
         stripe: providers.stripe,
       },

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AirportInput } from "@/components/AirportInput";
 import { t } from "@/lib/i18n";
 
 type Tab = "flights" | "package" | "hotels" | "cars";
@@ -83,32 +84,24 @@ export function SearchTabs() {
                 {airportHint}
               </p>
             </div>
-            <div>
-              <label className={labelClass} htmlFor={`${baseId}-origin`}>
-                {m.from}
-              </label>
-              <input
-                id={`${baseId}-origin`}
-                name="origin"
-                required
-                autoComplete="off"
-                className={fieldClass}
-                placeholder="FCO / Roma"
-              />
-            </div>
-            <div>
-              <label className={labelClass} htmlFor={`${baseId}-dest`}>
-                {m.to}
-              </label>
-              <input
-                id={`${baseId}-dest`}
-                name="destination"
-                required
-                autoComplete="off"
-                className={fieldClass}
-                placeholder="LIS / Lisbona"
-              />
-            </div>
+            <AirportInput
+              id={`${baseId}-origin`}
+              name="origin"
+              label={m.from}
+              labelClass={labelClass}
+              fieldClass={fieldClass}
+              placeholder="FCO / Roma"
+              required
+            />
+            <AirportInput
+              id={`${baseId}-dest`}
+              name="destination"
+              label={m.to}
+              labelClass={labelClass}
+              fieldClass={fieldClass}
+              placeholder="LIS / Lisbona"
+              required
+            />
             <div>
               <label className={labelClass} htmlFor={`${baseId}-depart`}>
                 {m.depart}
@@ -214,23 +207,22 @@ export function SearchTabs() {
               });
             }}
           >
-            <div>
-              <label className={labelClass} htmlFor={`${baseId}-p-origin`}>
-                {m.from}
-              </label>
-              <input id={`${baseId}-p-origin`} name="origin" required className={fieldClass} />
-            </div>
-            <div>
-              <label className={labelClass} htmlFor={`${baseId}-p-dest`}>
-                {m.destination}
-              </label>
-              <input
-                id={`${baseId}-p-dest`}
-                name="destination"
-                required
-                className={fieldClass}
-              />
-            </div>
+            <AirportInput
+              id={`${baseId}-p-origin`}
+              name="origin"
+              label={m.from}
+              labelClass={labelClass}
+              fieldClass={fieldClass}
+              required
+            />
+            <AirportInput
+              id={`${baseId}-p-dest`}
+              name="destination"
+              label={m.destination}
+              labelClass={labelClass}
+              fieldClass={fieldClass}
+              required
+            />
             <div>
               <label className={labelClass} htmlFor={`${baseId}-p-depart`}>
                 {m.depart}
@@ -418,23 +410,21 @@ export function SearchTabs() {
               });
             }}
           >
-            <div>
-              <label className={labelClass} htmlFor={`${baseId}-c-pick`}>
-                {m.pickup}
-              </label>
-              <input
-                id={`${baseId}-c-pick`}
-                name="pickupLocation"
-                required
-                className={fieldClass}
-              />
-            </div>
-            <div>
-              <label className={labelClass} htmlFor={`${baseId}-c-drop`}>
-                {m.dropoff}
-              </label>
-              <input id={`${baseId}-c-drop`} name="dropoffLocation" className={fieldClass} />
-            </div>
+            <AirportInput
+              id={`${baseId}-c-pick`}
+              name="pickupLocation"
+              label={m.pickup}
+              labelClass={labelClass}
+              fieldClass={fieldClass}
+              required
+            />
+            <AirportInput
+              id={`${baseId}-c-drop`}
+              name="dropoffLocation"
+              label={m.dropoff}
+              labelClass={labelClass}
+              fieldClass={fieldClass}
+            />
             <div>
               <label className={labelClass} htmlFor={`${baseId}-c-pd`}>
                 Data ritiro

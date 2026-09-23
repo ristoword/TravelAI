@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       {
         status: "provider_not_configured",
         message:
-          "Servizio non disponibile. Provider hotel non configurato (HOTEL_PROVIDER_API_KEY, HOTEL_PROVIDER_BASE_URL).",
+          "Servizio non disponibile. Provider hotel non configurato (AMADEUS_CLIENT_ID, AMADEUS_CLIENT_SECRET).",
         offers: [] as const,
         meta: {
           destination: parsed.data.destination,

@@ -1,6 +1,6 @@
 # TravelAI
 
-Piattaforma di viaggio: autenticazione reale, schema database, UI ricerca premium e adapter provider **senza dati inventati**.
+Piattaforma di viaggio: autenticazione reale, schema database, UI ricerca e adapter provider **senza dati inventati**.
 
 **Fase attuale: 4** — ricerca voli/hotel/auto/package, dettaglio hotel, confronto, AI tool registry, trip builder, booking gated.
 
@@ -9,42 +9,40 @@ Piattaforma di viaggio: autenticazione reale, schema database, UI ricerca premiu
 - **URL:** https://travelai-production-ceae.up.railway.app  
 - Deploy automatico da push su `main`.  
 - Healthcheck: `GET /api/health` (phase 4; provider status reali da env).
+- All'avvio: `prisma migrate deploy` (rete privata Railway) poi Next.js.
 
 ### Variabili (solo nomi)
 
 Auth/DB: `DATABASE_URL`, `NEXTAUTH_SECRET` / `AUTH_SECRET`, `NEXTAUTH_URL`, `AUTH_URL`, `AUTH_TRUST_HOST`.
 
-Travel (entrambe API_KEY + BASE_URL per attivare un adapter):  
-`FLIGHT_PROVIDER_API_KEY`, `FLIGHT_PROVIDER_BASE_URL`, `HOTEL_PROVIDER_API_KEY`, `HOTEL_PROVIDER_BASE_URL`, `CAR_PROVIDER_API_KEY`, `CAR_PROVIDER_BASE_URL`.
+**Amadeus for Developers (sandbox)** — un account OAuth2 per voli, hotel e transfer:  
+`AMADEUS_CLIENT_ID`, `AMADEUS_CLIENT_SECRET`, `AMADEUS_BASE_URL` (default documentato: `https://test.api.amadeus.com`).
 
-Autocomplete: `AIRPORT_AUTOCOMPLETE_BASE_URL` e/o `AIRPORT_DATASET_PATH`.
+Alias legacy opzionali: `FLIGHT_PROVIDER_API_KEY` / `HOTEL_PROVIDER_API_KEY` / `CAR_PROVIDER_API_KEY` come client id; il secret resta `AMADEUS_CLIENT_SECRET`.
+
+Autocomplete aeroporti: dataset pubblico **OurAirports** (download automatico). Opzionali: `AIRPORT_AUTOCOMPLETE_BASE_URL`, `AIRPORT_DATASET_PATH`.
 
 AI / pagamenti: `OPENAI_API_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`.
-
-Dopo `DATABASE_URL`, applicare migration (`prisma migrate deploy`) sul DB di produzione.
 
 ## Cosa funziona davvero
 
 - Auth, profilo, RBAC, audit, health
-- UI homepage con tab VOLI | VOLI+HOTEL | HOTEL | AUTO
-- API search interne → adapter; senza credenziali → `provider_not_configured` (nessun mock)
-- AI chat: tool registry reale; senza `OPENAI_API_KEY` messaggio esplicito, form manuale utilizzabile
-- Trip builder (richiede auth + DB)
-- Booking: solo con conferma utente + provider + Stripe configurati
-- Migration additiva `20260923190000_travel_search_entities`
+- UI homepage con tab VOLI | VOLI+HOTEL | HOTEL | AUTO + autocomplete OurAirports
+- API search → client HTTP Amadeus (Flight Offers Search, Hotel List + Hotel Offers v3, Transfer Offers)
+- Senza `AMADEUS_CLIENT_ID` + `AMADEUS_CLIENT_SECRET` → `provider_not_configured` (nessun mock, nessuna chiamata)
+- Con credenziali → chiamata HTTP reale; errori Amadeus propagati senza fallback inventati
+- Trip builder (auth + DB)
+- Booking: solo conferma utente + provider + Stripe; nessuna prenotazione simulata
+- Migration additive all'avvio del servizio
 
-## INTEGRAZIONE NON CONFIGURATA (stato tipico)
+## INTEGRAZIONE NON CONFIGURATA (stato tipico senza secret Amadeus)
 
 | Area | Env necessarie |
 |------|----------------|
-| Voli | `FLIGHT_PROVIDER_API_KEY` + `FLIGHT_PROVIDER_BASE_URL` + collegamento vendor HTTP |
-| Hotel | `HOTEL_PROVIDER_API_KEY` + `HOTEL_PROVIDER_BASE_URL` + collegamento vendor HTTP |
-| Auto | `CAR_PROVIDER_API_KEY` + `CAR_PROVIDER_BASE_URL` + collegamento vendor HTTP |
-| Aeroporti autocomplete | `AIRPORT_AUTOCOMPLETE_BASE_URL` o `AIRPORT_DATASET_PATH` + loader |
+| Voli / Hotel / Transfer | `AMADEUS_CLIENT_ID` + `AMADEUS_CLIENT_SECRET` |
+| Aeroporti autocomplete | OurAirports (pubblico; fallisce solo se download down) |
 | OpenAI | `OPENAI_API_KEY` |
 | Stripe | `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY` |
-
-Con sole API_KEY+BASE_URL presenti ma senza SDK vendor collegato, gli adapter restituiscono errore strutturato (non offerte finte).
 
 ## Setup locale
 

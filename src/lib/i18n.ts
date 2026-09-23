@@ -138,7 +138,7 @@ const it: Messages = {
   providerNotConfigured: "Provider non configurato",
   serviceUnavailable: "Servizio non disponibile",
   autocompleteNotConfigured:
-    "Autocomplete aeroporti non configurato — digita codice o città manualmente.",
+    "Autocomplete aeroporti basato su OurAirports — digita almeno 2 caratteri (IATA o città).",
   searchingFlights: "Searching flights…",
   searchingHotels: "Searching hotels…",
   searchingCars: "Searching rental cars…",
