@@ -8,6 +8,7 @@ import {
   formatMoney,
 } from "@/components/SearchStates";
 import { useMountedFetch } from "@/components/useMountedFetch";
+import { btnGhostClass, btnPrimaryClass, cardClass } from "@/components/ui";
 import { t } from "@/lib/i18n";
 
 type HotelOffer = {
@@ -125,7 +126,7 @@ export function HotelResultsClient(props: Props) {
   }
   if (status === "provider_not_configured") {
     return (
-      <ProviderEmpty title={m.providerNotConfigured} message={message || ""} />
+      <ProviderEmpty title={m.providerNotConfigured} message={message || m.homeCtaHonest} />
     );
   }
   if (offers.length === 0) {
@@ -142,7 +143,7 @@ export function HotelResultsClient(props: Props) {
   const filterPanel = (
     <div className="space-y-4 text-sm">
       <div>
-        <p className="mb-2 font-medium">Categoria (stelle min)</p>
+        <p className="mb-2 font-medium text-[var(--ink)]">Categoria (stelle min)</p>
         <input
           type="range"
           min={0}
@@ -150,14 +151,15 @@ export function HotelResultsClient(props: Props) {
           value={minStars}
           onChange={(e) => setMinStars(Number(e.target.value))}
           aria-label="Stelle minime"
+          className="w-full accent-[var(--accent)]"
         />
-        <p className="text-xs text-stone-500">{minStars}+</p>
+        <p className="text-xs text-[var(--muted)]">{minStars}+ stelle</p>
       </div>
       <fieldset>
-        <legend className="mb-2 font-medium">Servizi</legend>
+        <legend className="mb-2 font-medium text-[var(--ink)]">Servizi</legend>
         <div className="space-y-2">
           {AMENITY_FILTERS.map((a) => (
-            <label key={a.code} className="flex items-center gap-2">
+            <label key={a.code} className="flex items-center gap-2 text-[var(--ink-soft)]">
               <input
                 type="checkbox"
                 checked={selectedAmenities.includes(a.code)}
@@ -174,22 +176,20 @@ export function HotelResultsClient(props: Props) {
           ))}
         </div>
       </fieldset>
-      <p className="text-xs text-stone-500">
+      <p className="text-xs text-[var(--muted)]">
         I filtri si applicano solo ai risultati del provider, non a liste inventate.
       </p>
     </div>
   );
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
-      <aside className="hidden rounded-xl border border-teal-900/10 bg-white/70 p-4 lg:block">
-        {filterPanel}
-      </aside>
+    <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+      <aside className={`hidden ${cardClass} p-4 lg:block`}>{filterPanel}</aside>
       <div>
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <button
             type="button"
-            className="rounded-md border border-teal-900/20 bg-white/80 px-3 py-2 text-sm lg:hidden"
+            className={`${btnGhostClass} lg:hidden`}
             onClick={() => setFiltersOpen(true)}
           >
             {m.filters}
@@ -197,7 +197,7 @@ export function HotelResultsClient(props: Props) {
           {compareIds.length >= 2 && (
             <Link
               href={`/compare?ids=${compareIds.map(encodeURIComponent).join(",")}`}
-              className="rounded-md bg-teal-900 px-3 py-2 text-xs font-semibold uppercase text-white"
+              className={`${btnPrimaryClass} !px-4 !py-2 text-xs`}
             >
               {m.compare} ({compareIds.length})
             </Link>
@@ -205,9 +205,22 @@ export function HotelResultsClient(props: Props) {
         </div>
 
         {filtersOpen && (
-          <div className="fixed inset-0 z-40 bg-black/40 p-4 lg:hidden" role="dialog" aria-modal>
-            <div className="mt-auto rounded-t-2xl bg-[var(--sand)] p-4">
-              <button type="button" className="mb-3 text-sm" onClick={() => setFiltersOpen(false)}>
+          <div
+            className="fixed inset-0 z-40 flex items-end bg-black/45 lg:hidden"
+            role="dialog"
+            aria-modal
+            aria-label={m.filters}
+            onClick={() => setFiltersOpen(false)}
+          >
+            <div
+              className="bottom-sheet animate-sheet w-full bg-[var(--bg-b)] p-5"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                className={`${btnGhostClass} mb-4`}
+                onClick={() => setFiltersOpen(false)}
+              >
                 Chiudi
               </button>
               {filterPanel}
@@ -221,9 +234,9 @@ export function HotelResultsClient(props: Props) {
             return (
               <li
                 key={hotel.externalId}
-                className="grid overflow-hidden rounded-2xl border border-teal-900/10 bg-white/80 shadow-sm md:grid-cols-[280px_1fr]"
+                className={`offer-card grid overflow-hidden ${cardClass} md:grid-cols-[280px_1fr]`}
               >
-                <div className="relative min-h-44 bg-teal-900/10">
+                <div className="relative min-h-44 bg-[var(--accent-soft)]">
                   {hotel.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -233,15 +246,15 @@ export function HotelResultsClient(props: Props) {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="flex h-full min-h-44 items-center justify-center px-4 text-center text-sm text-stone-500">
+                    <div className="flex h-full min-h-44 items-center justify-center px-4 text-center text-sm text-[var(--muted)]">
                       {m.imageUnavailable}
                     </div>
                   )}
                 </div>
-                <div className="flex flex-col justify-between gap-3 p-4">
+                <div className="flex flex-col justify-between gap-3 p-4 sm:p-5">
                   <div>
-                    <h2 className="font-display text-xl text-teal-950">{hotel.name}</h2>
-                    <p className="text-sm text-stone-600">
+                    <h2 className="font-display text-xl text-[var(--ink)]">{hotel.name}</h2>
+                    <p className="text-sm text-[var(--ink-soft)]">
                       {hotel.starRating != null
                         ? `${hotel.starRating}★`
                         : m.notAvailable}
@@ -252,22 +265,22 @@ export function HotelResultsClient(props: Props) {
                         ? ` · ${hotel.reviewCount} recensioni`
                         : ""}
                     </p>
-                    <p className="text-sm text-stone-600">
+                    <p className="text-sm text-[var(--ink-soft)]">
                       {hotel.address || hotel.city || m.notAvailable}
-                      {hotel.distanceKm != null
-                        ? ` · ${hotel.distanceKm} km`
-                        : ""}
+                      {hotel.distanceKm != null ? ` · ${hotel.distanceKm} km` : ""}
                     </p>
                     {hotel.amenities && hotel.amenities.length > 0 && (
-                      <p className="mt-1 text-xs text-stone-500">
+                      <p className="mt-2 text-xs text-[var(--muted)]">
                         {hotel.amenities.map((a) => a.name).join(" · ")}
                       </p>
                     )}
                   </div>
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-lg font-semibold">{price ?? m.notAvailable}</p>
+                    <p className="text-xl font-semibold text-[var(--ink)]">
+                      {price ?? m.notAvailable}
+                    </p>
                     <div className="flex flex-wrap gap-2">
-                      <label className="flex items-center gap-1 text-xs">
+                      <label className="flex items-center gap-1.5 rounded-xl border border-[var(--line)] px-3 py-2 text-xs">
                         <input
                           type="checkbox"
                           checked={compareIds.includes(hotel.externalId)}
@@ -277,13 +290,13 @@ export function HotelResultsClient(props: Props) {
                       </label>
                       <Link
                         href={`/hotels/${encodeURIComponent(hotel.externalId)}`}
-                        className="rounded-md border border-teal-900/30 px-3 py-2 text-xs font-semibold uppercase"
+                        className={`${btnGhostClass} !py-2 text-xs`}
                       >
                         {m.seeHotel}
                       </Link>
                       <Link
                         href={`/book?kind=hotel&externalId=${encodeURIComponent(hotel.externalId)}`}
-                        className="rounded-md bg-teal-900 px-3 py-2 text-xs font-semibold uppercase text-white"
+                        className={`${btnPrimaryClass} !px-4 !py-2 text-xs`}
                       >
                         {m.book}
                       </Link>

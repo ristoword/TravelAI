@@ -132,13 +132,13 @@ export function PackageResultsClient(props: Props) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-teal-900/10 bg-white/80 p-4">
+      <section className="rounded-2xl border border-[var(--line)] bg-white/90 p-5 shadow-[0_18px_50px_-28px_rgba(15,45,55,0.35)]">
         <div className="mb-3 flex items-center justify-between gap-2">
-          <h2 className="font-display text-xl text-teal-950">Volo</h2>
+          <h2 className="font-display text-xl text-[var(--ink)]">Volo</h2>
           {payload.flight.offers.length > 1 && (
             <button
               type="button"
-              className="text-sm underline"
+              className="text-sm text-[var(--accent)] underline-offset-4 hover:underline"
               onClick={() =>
                 setFlightIdx((i) => (i + 1) % payload.flight.offers.length)
               }
@@ -148,11 +148,11 @@ export function PackageResultsClient(props: Props) {
           )}
         </div>
         {!payload.flight.configured ? (
-          <p className="text-sm text-amber-900">
+          <p className="text-sm text-[var(--warn-ink)]">
             {m.providerNotConfigured}: {payload.flight.message}
           </p>
         ) : selectedFlight ? (
-          <p className="text-sm">
+          <p className="text-sm text-[var(--ink-soft)]">
             {selectedFlight.airline || m.notAvailable}
             {selectedFlight.flightNumber ? ` · ${selectedFlight.flightNumber}` : ""}{" "}
             —{" "}
@@ -160,19 +160,19 @@ export function PackageResultsClient(props: Props) {
               m.notAvailable}
           </p>
         ) : (
-          <p className="text-sm text-stone-600">
+          <p className="text-sm text-[var(--ink-soft)]">
             {payload.flight.message || "Nessun volo dal provider."}
           </p>
         )}
       </section>
 
-      <section className="rounded-xl border border-teal-900/10 bg-white/80 p-4">
+      <section className="rounded-2xl border border-[var(--line)] bg-white/90 p-5 shadow-[0_18px_50px_-28px_rgba(15,45,55,0.35)]">
         <div className="mb-3 flex items-center justify-between gap-2">
-          <h2 className="font-display text-xl text-teal-950">Hotel</h2>
+          <h2 className="font-display text-xl text-[var(--ink)]">Hotel</h2>
           {payload.hotel.offers.length > 1 && (
             <button
               type="button"
-              className="text-sm underline"
+              className="text-sm text-[var(--accent)] underline-offset-4 hover:underline"
               onClick={() =>
                 setHotelIdx((i) => (i + 1) % payload.hotel.offers.length)
               }
@@ -182,30 +182,30 @@ export function PackageResultsClient(props: Props) {
           )}
         </div>
         {!payload.hotel.configured ? (
-          <p className="text-sm text-amber-900">
+          <p className="text-sm text-[var(--warn-ink)]">
             {m.providerNotConfigured}: {payload.hotel.message}
           </p>
         ) : selectedHotel ? (
-          <p className="text-sm">
+          <p className="text-sm text-[var(--ink-soft)]">
             {selectedHotel.name} —{" "}
             {formatMoney(selectedHotel.price.amount, selectedHotel.price.currency) ??
               m.notAvailable}
           </p>
         ) : (
-          <p className="text-sm text-stone-600">
+          <p className="text-sm text-[var(--ink-soft)]">
             {payload.hotel.message || "Nessun hotel dal provider."}
           </p>
         )}
       </section>
 
-      <section className="rounded-xl border border-teal-900/15 bg-teal-900/5 p-4">
-        <h2 className="font-display text-xl text-teal-950">{m.total}</h2>
-        <p className="mt-1 text-2xl font-semibold">
+      <section className="rounded-2xl border border-[var(--line)] bg-[var(--accent-soft)] p-5">
+        <h2 className="font-display text-xl text-[var(--ink)]">{m.total}</h2>
+        <p className="mt-1 text-2xl font-semibold text-[var(--ink)]">
           {total
             ? formatMoney(total.amount, total.currency)
             : "Totale non disponibile"}
         </p>
-        <p className="mt-1 text-xs text-stone-600">
+        <p className="mt-1 text-xs text-[var(--muted)]">
           {payload.totalNote ||
             "Il totale è la somma solo se entrambi i prezzi arrivano dal provider."}
         </p>

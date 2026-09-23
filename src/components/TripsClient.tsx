@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useMountedFetch } from "@/components/useMountedFetch";
+import { btnGhostClass, btnPrimaryClass, cardClass, fieldClass } from "@/components/ui";
 import { t } from "@/lib/i18n";
 
 type Trip = {
@@ -40,11 +41,11 @@ export function TripsClient({ signedIn }: { signedIn: boolean }) {
 
   if (!signedIn) {
     return (
-      <div className="rounded-xl border border-teal-900/10 bg-white/70 p-6 text-center">
-        <p className="text-sm text-stone-700">
+      <div className={`${cardClass} p-8 text-center`}>
+        <p className="text-sm text-[var(--ink-soft)]">
           Accedi per salvare Trip e TripItem (anche bozze utente, mai offerte seed).
         </p>
-        <Link href="/login" className="mt-3 inline-block underline">
+        <Link href="/login" className={`${btnPrimaryClass} mt-4 inline-flex`}>
           {m.login}
         </Link>
       </div>
@@ -92,83 +93,96 @@ export function TripsClient({ signedIn }: { signedIn: boolean }) {
   return (
     <div className="space-y-6">
       {message && (
-        <p className="rounded-md border border-amber-700/20 bg-amber-50 px-3 py-2 text-sm" role="status">
+        <p
+          className="rounded-xl border border-amber-700/25 bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--warn-ink)]"
+          role="status"
+        >
           {message}
         </p>
       )}
       <form
-        className="grid gap-3 rounded-xl border border-teal-900/10 bg-white/80 p-4 sm:grid-cols-3"
+        className={`grid gap-3 ${cardClass} p-4 sm:grid-cols-3`}
         onSubmit={(e) => {
           e.preventDefault();
           void createTrip();
         }}
       >
         <input
-          className="rounded-md border border-teal-900/20 px-3 py-2 text-sm"
+          className={fieldClass}
           placeholder="Titolo viaggio"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
+          aria-label="Titolo viaggio"
         />
         <input
-          className="rounded-md border border-teal-900/20 px-3 py-2 text-sm"
+          className={fieldClass}
           placeholder="Destinazione (opzionale)"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
+          aria-label="Destinazione"
         />
-        <button
-          type="submit"
-          className="rounded-md bg-teal-900 px-4 py-2 text-sm font-semibold text-white"
-        >
+        <button type="submit" className={btnPrimaryClass}>
           Crea viaggio
         </button>
       </form>
 
-      <ul className="space-y-3">
-        {trips.map((trip) => (
-          <li
-            key={trip.id}
-            className="rounded-xl border border-teal-900/10 bg-white/80 p-4"
-          >
-            <button
-              type="button"
-              className="text-left"
-              onClick={() => setActiveTrip(trip.id)}
-            >
-              <h2 className="font-display text-lg text-teal-950">{trip.title}</h2>
-              <p className="text-sm text-stone-600">
-                {trip.destination || "Destinazione non indicata"}
-              </p>
-            </button>
-            {trip.tripItems && trip.tripItems.length > 0 && (
-              <ul className="mt-2 list-inside list-disc text-sm text-stone-600">
-                {trip.tripItems.map((item) => (
-                  <li key={item.id}>
-                    [{item.type}] {item.title}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {activeTrip === trip.id && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                <input
-                  className="flex-1 rounded-md border border-teal-900/20 px-3 py-2 text-sm"
-                  placeholder="Aggiungi voce bozza"
-                  value={itemTitle}
-                  onChange={(e) => setItemTitle(e.target.value)}
-                />
-                <button
-                  type="button"
-                  onClick={() => void addItem()}
-                  className="rounded-md border border-teal-900/30 px-3 py-2 text-sm"
-                >
-                  Aggiungi
-                </button>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+      {trips.length === 0 ? (
+        <div className={`${cardClass} p-8 text-center text-sm text-[var(--ink-soft)]`}>
+          Nessun viaggio salvato. Crea una bozza con i tuoi dati — niente seed automatici.
+        </div>
+      ) : (
+        <ul className="space-y-3">
+          {trips.map((trip) => (
+            <li key={trip.id} className={`${cardClass} p-5`}>
+              <button
+                type="button"
+                className="w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                onClick={() => setActiveTrip(trip.id)}
+                aria-expanded={activeTrip === trip.id}
+              >
+                <h2 className="font-display text-xl text-[var(--ink)]">{trip.title}</h2>
+                <p className="text-sm text-[var(--ink-soft)]">
+                  {trip.destination || "Destinazione non indicata"}
+                </p>
+              </button>
+              {trip.tripItems && trip.tripItems.length > 0 && (
+                <ul className="mt-3 space-y-1 text-sm text-[var(--ink-soft)]">
+                  {trip.tripItems.map((item) => (
+                    <li
+                      key={item.id}
+                      className="rounded-lg bg-[var(--accent-soft)] px-3 py-2"
+                    >
+                      <span className="text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">
+                        {item.type}
+                      </span>{" "}
+                      {item.title}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {activeTrip === trip.id && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <input
+                    className={`${fieldClass} flex-1`}
+                    placeholder="Aggiungi voce bozza"
+                    value={itemTitle}
+                    onChange={(e) => setItemTitle(e.target.value)}
+                    aria-label="Nuova voce bozza"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => void addItem()}
+                    className={btnGhostClass}
+                  >
+                    Aggiungi
+                  </button>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
   formatMoney,
 } from "@/components/SearchStates";
 import { useMountedFetch } from "@/components/useMountedFetch";
+import { btnGhostClass, btnPrimaryClass, cardClass, fieldClass } from "@/components/ui";
 import { t } from "@/lib/i18n";
 
 type FlightOffer = {
@@ -151,7 +152,7 @@ export function FlightResultsClient(props: Props) {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
+    <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
       <aside className="hidden lg:block" aria-label={m.filters}>
         <Filters
           sort={sort}
@@ -163,27 +164,33 @@ export function FlightResultsClient(props: Props) {
       </aside>
 
       <div>
-        <div className="mb-3 flex items-center justify-between lg:hidden">
+        <div className="mb-4 flex items-center justify-between lg:hidden">
           <button
             type="button"
-            className="rounded-md border border-teal-900/20 bg-white/80 px-3 py-2 text-sm"
+            className={btnGhostClass}
             onClick={() => setFiltersOpen(true)}
+            aria-haspopup="dialog"
           >
             {m.filters}
           </button>
+          <p className="text-xs text-[var(--muted)]">{filtered.length} risultati</p>
         </div>
 
         {filtersOpen && (
           <div
-            className="fixed inset-0 z-40 bg-black/40 p-4 lg:hidden"
+            className="fixed inset-0 z-40 flex items-end bg-black/45 p-0 lg:hidden"
             role="dialog"
             aria-modal="true"
             aria-label={m.filters}
+            onClick={() => setFiltersOpen(false)}
           >
-            <div className="ml-auto mt-auto max-h-[80vh] overflow-auto rounded-t-2xl bg-[var(--sand)] p-4">
-              <div className="mb-3 flex justify-between">
-                <h2 className="font-display text-lg">{m.filters}</h2>
-                <button type="button" onClick={() => setFiltersOpen(false)}>
+            <div
+              className="bottom-sheet animate-sheet max-h-[80vh] w-full overflow-auto bg-[var(--bg-b)] p-5"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="font-display text-xl">{m.filters}</h2>
+                <button type="button" className={btnGhostClass} onClick={() => setFiltersOpen(false)}>
                   Chiudi
                 </button>
               </div>
@@ -202,54 +209,57 @@ export function FlightResultsClient(props: Props) {
           {filtered.map((offer) => {
             const price = formatMoney(offer.price.amount, offer.price.currency);
             return (
-              <li
-                key={offer.externalId}
-                className="rounded-xl border border-teal-900/10 bg-white/80 p-4 shadow-sm"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
+              <li key={offer.externalId} className={`offer-card ${cardClass} p-4 sm:p-5`}>
+                <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="flex items-center gap-3">
                     {offer.airlineLogoUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={offer.airlineLogoUrl}
                         alt={offer.airline ? `Logo ${offer.airline}` : "Logo compagnia"}
-                        className="h-8 w-8 object-contain"
+                        className="h-10 w-10 rounded-lg object-contain"
                         loading="lazy"
                       />
-                    ) : null}
+                    ) : (
+                      <div
+                        className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-xs font-bold text-[var(--accent)]"
+                        aria-hidden
+                      >
+                        {(offer.airline || "?").slice(0, 2).toUpperCase()}
+                      </div>
+                    )}
                     <div>
-                      <p className="font-semibold text-teal-950">
+                      <p className="font-semibold text-[var(--ink)]">
                         {offer.airline || m.notAvailable}
                         {offer.flightNumber ? ` · ${offer.flightNumber}` : ""}
                       </p>
-                      <p className="text-sm text-stone-600">
+                      <p className="text-sm text-[var(--ink-soft)]">
                         {offer.origin || "?"} → {offer.destination || "?"}
                       </p>
-                      <p className="text-sm text-stone-600">
+                      <p className="text-sm text-[var(--ink-soft)]">
                         {offer.departAt || m.notAvailable}
                         {offer.arriveAt ? ` – ${offer.arriveAt}` : ""}
                       </p>
-                      <p className="text-xs text-stone-500">
+                      <p className="mt-1 text-xs text-[var(--muted)]">
                         Durata:{" "}
                         {offer.durationMinutes != null
                           ? `${offer.durationMinutes} min`
                           : m.notAvailable}{" "}
-                        · Scali:{" "}
-                        {offer.stops != null ? offer.stops : m.notAvailable}
+                        · Scali: {offer.stops != null ? offer.stops : m.notAvailable}
                         {offer.baggage ? ` · Bagaglio: ${offer.baggage}` : ""}
                       </p>
                       {offer.conditions && (
-                        <p className="mt-1 text-xs text-stone-500">{offer.conditions}</p>
+                        <p className="mt-1 text-xs text-[var(--muted)]">{offer.conditions}</p>
                       )}
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-semibold text-teal-950">
+                    <p className="text-xl font-semibold text-[var(--ink)]">
                       {price ?? m.notAvailable}
                     </p>
                     <Link
                       href={`/book?kind=flight&externalId=${encodeURIComponent(offer.externalId)}`}
-                      className="mt-2 inline-block rounded-md bg-teal-900 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-white"
+                      className={`${btnPrimaryClass} mt-3 !px-4 !py-2 text-xs`}
                     >
                       {m.select}
                     </Link>
@@ -278,11 +288,11 @@ function Filters({
   labels: ReturnType<typeof t>;
 }) {
   return (
-    <div className="space-y-4 rounded-xl border border-teal-900/10 bg-white/70 p-4 text-sm">
+    <div className={`${cardClass} space-y-4 p-4 text-sm`}>
       <div>
-        <p className="mb-2 font-medium text-teal-950">Ordina</p>
+        <p className="mb-2 font-medium text-[var(--ink)]">Ordina</p>
         <select
-          className="w-full rounded-md border border-teal-900/20 bg-white px-2 py-2"
+          className={fieldClass}
           value={sort}
           onChange={(e) =>
             setSort(e.target.value as "priceAsc" | "priceDesc" | "duration")
@@ -292,14 +302,14 @@ function Filters({
           <option value="priceDesc">{labels.sortPriceDesc}</option>
           <option value="duration">{labels.sortDuration}</option>
         </select>
-        <p className="mt-1 text-xs text-stone-500">
+        <p className="mt-2 text-xs text-[var(--muted)]">
           Nessuna etichetta &quot;Consigliato&quot;: ordinamento solo su campi provider.
         </p>
       </div>
       <div>
-        <p className="mb-2 font-medium text-teal-950">Scali max</p>
+        <p className="mb-2 font-medium text-[var(--ink)]">Scali max</p>
         <select
-          className="w-full rounded-md border border-teal-900/20 bg-white px-2 py-2"
+          className={fieldClass}
           value={maxStops ?? ""}
           onChange={(e) =>
             setMaxStops(e.target.value === "" ? null : Number(e.target.value))

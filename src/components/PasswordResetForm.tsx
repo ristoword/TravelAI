@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { btnPrimaryClass, cardClass, fieldClass } from "@/components/ui";
 import { t } from "@/lib/i18n";
 
 export function PasswordResetForm() {
@@ -56,53 +57,53 @@ export function PasswordResetForm() {
   }
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-8">
-      <form onSubmit={requestReset} className="flex flex-col gap-4">
-        <h2 className="text-lg font-medium">{m.requestReset}</h2>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>{m.email}</span>
+    <div className="flex w-full max-w-md flex-col gap-6">
+      <form onSubmit={requestReset} className={`${cardClass} flex flex-col gap-4 p-5`}>
+        <h2 className="font-display text-xl text-[var(--ink)]">{m.requestReset}</h2>
+        <label className="flex flex-col gap-1.5 text-sm">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ink-soft)]">
+            {m.email}
+          </span>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="rounded border border-stone-300 bg-white px-3 py-2"
+            className={fieldClass}
           />
         </label>
-        <button
-          type="submit"
-          className="rounded bg-teal-800 px-4 py-2 text-white"
-        >
+        <button type="submit" className={btnPrimaryClass}>
           {m.requestReset}
         </button>
       </form>
-      <form onSubmit={confirmReset} className="flex flex-col gap-4">
-        <h2 className="text-lg font-medium">{m.confirmReset}</h2>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>Token</span>
+      <form onSubmit={confirmReset} className={`${cardClass} flex flex-col gap-4 p-5`}>
+        <h2 className="font-display text-xl text-[var(--ink)]">{m.confirmReset}</h2>
+        <label className="flex flex-col gap-1.5 text-sm">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ink-soft)]">
+            Token
+          </span>
           <input
             type="text"
             required
             value={token}
             onChange={(e) => setToken(e.target.value)}
-            className="rounded border border-stone-300 bg-white px-3 py-2"
+            className={fieldClass}
           />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>{m.password}</span>
+        <label className="flex flex-col gap-1.5 text-sm">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ink-soft)]">
+            {m.password}
+          </span>
           <input
             type="password"
             required
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="rounded border border-stone-300 bg-white px-3 py-2"
+            className={fieldClass}
           />
         </label>
-        <button
-          type="submit"
-          className="rounded bg-teal-800 px-4 py-2 text-white"
-        >
+        <button type="submit" className={btnPrimaryClass}>
           {m.confirmReset}
         </button>
       </form>
@@ -112,7 +113,7 @@ export function PasswordResetForm() {
         </p>
       ) : null}
       {message ? (
-        <p role="status" className="text-sm text-teal-900">
+        <p role="status" className="text-sm text-[var(--accent)]">
           {message}
         </p>
       ) : null}

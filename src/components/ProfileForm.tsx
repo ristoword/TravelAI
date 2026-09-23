@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { btnGhostClass, btnPrimaryClass, cardClass, fieldClass } from "@/components/ui";
 import { locales, t } from "@/lib/i18n";
 
 type ProfileUser = {
@@ -74,7 +75,7 @@ export function ProfileForm() {
   }
 
   if (loading) {
-    return <p className="text-sm text-stone-600">Caricamento…</p>;
+    return <p className="text-sm text-[var(--muted)]">Caricamento…</p>;
   }
 
   if (!user) {
@@ -86,35 +87,39 @@ export function ProfileForm() {
   }
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-6">
-      <div className="text-sm text-stone-700">
+    <div className={`${cardClass} flex w-full max-w-md flex-col gap-6 p-6`}>
+      <div className="space-y-1 text-sm text-[var(--ink-soft)]">
         <p>
-          <strong>Email:</strong> {user.email}
+          <span className="font-semibold text-[var(--ink)]">Email:</span> {user.email}
         </p>
         <p>
-          <strong>Ruolo:</strong> {user.role}
+          <span className="font-semibold text-[var(--ink)]">Ruolo:</span> {user.role}
         </p>
         <p>
-          <strong>Email verificata:</strong>{" "}
+          <span className="font-semibold text-[var(--ink)]">Email verificata:</span>{" "}
           {user.emailVerified ? "sì" : "no"}
         </p>
       </div>
       <form onSubmit={onSave} className="flex flex-col gap-4">
-        <label className="flex flex-col gap-1 text-sm">
-          <span>{m.name}</span>
+        <label className="flex flex-col gap-1.5 text-sm">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ink-soft)]">
+            {m.name}
+          </span>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="rounded border border-stone-300 bg-white px-3 py-2"
+            className={fieldClass}
           />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>Locale</span>
+        <label className="flex flex-col gap-1.5 text-sm">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ink-soft)]">
+            Locale
+          </span>
           <select
             value={locale}
             onChange={(e) => setLocale(e.target.value)}
-            className="rounded border border-stone-300 bg-white px-3 py-2"
+            className={fieldClass}
           >
             {locales.map((code) => (
               <option key={code} value={code}>
@@ -129,22 +134,15 @@ export function ProfileForm() {
           </p>
         ) : null}
         {status ? (
-          <p role="status" className="text-sm text-teal-900">
+          <p role="status" className="text-sm text-[var(--accent)]">
             {status}
           </p>
         ) : null}
-        <button
-          type="submit"
-          className="rounded bg-teal-800 px-4 py-2 text-white"
-        >
+        <button type="submit" className={btnPrimaryClass}>
           {m.updateProfile}
         </button>
       </form>
-      <button
-        type="button"
-        onClick={onLogout}
-        className="rounded border border-stone-400 px-4 py-2 text-sm"
-      >
+      <button type="button" onClick={onLogout} className={btnGhostClass}>
         {m.logout}
       </button>
     </div>

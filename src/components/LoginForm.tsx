@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { btnGhostClass, btnPrimaryClass, fieldClass } from "@/components/ui";
 import { t } from "@/lib/i18n";
 
 export function LoginForm() {
@@ -48,26 +49,30 @@ export function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex w-full max-w-md flex-col gap-4">
-      <label className="flex flex-col gap-1 text-sm">
-        <span>{m.email}</span>
+      <label className="flex flex-col gap-1.5 text-sm text-[var(--ink-soft)]">
+        <span className="text-[11px] font-semibold uppercase tracking-wide">
+          {m.email}
+        </span>
         <input
           type="email"
           autoComplete="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded border border-stone-300 bg-white px-3 py-2"
+          className={fieldClass}
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm">
-        <span>{m.password}</span>
+      <label className="flex flex-col gap-1.5 text-sm text-[var(--ink-soft)]">
+        <span className="text-[11px] font-semibold uppercase tracking-wide">
+          {m.password}
+        </span>
         <input
           type="password"
           autoComplete="current-password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded border border-stone-300 bg-white px-3 py-2"
+          className={fieldClass}
         />
       </label>
       {error ? (
@@ -80,26 +85,14 @@ export function LoginForm() {
           {oauthMessage}
         </p>
       ) : null}
-      <button
-        type="submit"
-        disabled={pending}
-        className="rounded bg-teal-800 px-4 py-2 text-white disabled:opacity-60"
-      >
+      <button type="submit" disabled={pending} className={btnPrimaryClass}>
         {m.submitLogin}
       </button>
       <div className="flex flex-col gap-2">
-        <button
-          type="button"
-          onClick={() => onOAuth("google")}
-          className="rounded border border-stone-300 px-4 py-2 text-sm"
-        >
+        <button type="button" onClick={() => onOAuth("google")} className={btnGhostClass}>
           Google
         </button>
-        <button
-          type="button"
-          onClick={() => onOAuth("github")}
-          className="rounded border border-stone-300 px-4 py-2 text-sm"
-        >
+        <button type="button" onClick={() => onOAuth("github")} className={btnGhostClass}>
           GitHub
         </button>
       </div>

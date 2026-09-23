@@ -12,29 +12,31 @@ export default async function HomePage() {
     <main className="relative flex min-h-full flex-1 flex-col">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 opacity-50"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 80% 50% at 20% 10%, rgba(42,122,124,0.35), transparent), radial-gradient(ellipse 60% 40% at 90% 0%, rgba(196,165,116,0.35), transparent)",
-        }}
-      />
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[70vh] overflow-hidden"
+      >
+        <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-[#7eb8c2]/35 blur-3xl" />
+        <div className="absolute right-[-4rem] top-0 h-80 w-80 rounded-full bg-[#a8cfd6]/40 blur-3xl" />
+      </div>
+
       <SiteHeader signedIn={Boolean(session?.user)} />
 
-      <section className="relative px-5 pb-10 pt-6 sm:px-10 sm:pt-10">
+      <section className="relative px-5 pb-8 pt-4 sm:px-10 sm:pt-8">
         <div className="mx-auto max-w-5xl">
-          <p className="font-display animate-fade-up text-5xl leading-none tracking-tight text-teal-950 sm:text-6xl md:text-7xl">
+          <p className="font-display animate-fade-up text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.92] tracking-tight text-[var(--accent)]">
             {m.brand}
           </p>
-          <h1 className="animate-fade-up mt-4 max-w-3xl font-display text-3xl leading-tight text-teal-950/90 sm:text-4xl md:text-5xl">
+          <h1 className="animate-fade-up mt-5 max-w-3xl font-display text-[clamp(1.75rem,4.5vw,3rem)] leading-[1.12] text-[var(--ink)]">
             {m.heroTitle}
           </h1>
-          <p className="animate-fade-up-delay mt-4 max-w-xl text-base text-stone-700 sm:text-lg">
+          <p className="animate-fade-up-delay mt-4 max-w-xl text-base leading-relaxed text-[var(--ink-soft)] sm:text-lg">
             {m.heroSubtitle}
           </p>
-          <div className="mt-8">
+          <div className="animate-fade-up-delay-2 mt-8">
             <SearchTabs />
           </div>
-          <p className="mt-4 max-w-2xl text-xs text-stone-600">{m.homeCtaHonest}</p>
+          <p className="mt-4 max-w-2xl text-xs leading-relaxed text-[var(--muted)]">
+            {m.homeCtaHonest}
+          </p>
         </div>
       </section>
 

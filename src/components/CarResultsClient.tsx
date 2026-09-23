@@ -8,6 +8,7 @@ import {
   formatMoney,
 } from "@/components/SearchStates";
 import { useMountedFetch } from "@/components/useMountedFetch";
+import { btnPrimaryClass, cardClass, fieldClass } from "@/components/ui";
 import { t } from "@/lib/i18n";
 
 type CarOffer = {
@@ -105,7 +106,7 @@ export function CarResultsClient(props: Props) {
   }
   if (status === "provider_not_configured") {
     return (
-      <ProviderEmpty title={m.providerNotConfigured} message={message || ""} />
+      <ProviderEmpty title={m.providerNotConfigured} message={message || m.homeCtaHonest} />
     );
   }
   if (offers.length === 0) {
@@ -120,25 +121,32 @@ export function CarResultsClient(props: Props) {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
-      <aside className="space-y-3 rounded-xl border border-teal-900/10 bg-white/70 p-4 text-sm">
+    <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
+      <aside className={`${cardClass} space-y-3 p-4 text-sm`}>
         <label className="block">
-          Categoria
+          <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-[var(--ink-soft)]">
+            Categoria
+          </span>
           <input
-            className="mt-1 w-full rounded-md border border-teal-900/20 px-2 py-2"
+            className={fieldClass}
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             placeholder="Da risultati provider"
           />
         </label>
         <label className="block">
-          Cambio
+          <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-[var(--ink-soft)]">
+            Cambio
+          </span>
           <input
-            className="mt-1 w-full rounded-md border border-teal-900/20 px-2 py-2"
+            className={fieldClass}
             value={transmission}
             onChange={(e) => setTransmission(e.target.value)}
           />
         </label>
+        <p className="text-xs text-[var(--muted)]">
+          Filtri solo sui risultati reali del provider.
+        </p>
       </aside>
       <ul className="space-y-3">
         {filtered.map((car) => {
@@ -146,9 +154,9 @@ export function CarResultsClient(props: Props) {
           return (
             <li
               key={car.externalId}
-              className="grid gap-3 rounded-xl border border-teal-900/10 bg-white/80 p-4 md:grid-cols-[160px_1fr_auto]"
+              className={`offer-card grid gap-3 ${cardClass} p-4 md:grid-cols-[160px_1fr_auto]`}
             >
-              <div className="flex min-h-24 items-center justify-center rounded-lg bg-teal-900/5">
+              <div className="flex min-h-24 items-center justify-center rounded-xl bg-[var(--accent-soft)]">
                 {car.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -158,29 +166,31 @@ export function CarResultsClient(props: Props) {
                     loading="lazy"
                   />
                 ) : (
-                  <span className="text-xs text-stone-500">{m.imageUnavailable}</span>
+                  <span className="text-xs text-[var(--muted)]">{m.imageUnavailable}</span>
                 )}
               </div>
               <div>
-                <p className="font-semibold text-teal-950">
+                <p className="font-semibold text-[var(--ink)]">
                   {car.vehicleName || m.notAvailable}
                 </p>
-                <p className="text-sm text-stone-600">
+                <p className="text-sm text-[var(--ink-soft)]">
                   {car.vendorName || m.notAvailable}
                   {car.category ? ` · ${car.category}` : ""}
                   {car.transmission ? ` · ${car.transmission}` : ""}
                 </p>
-                <p className="text-xs text-stone-500">
+                <p className="mt-1 text-xs text-[var(--muted)]">
                   Posti: {car.seats ?? m.notAvailable} · Bagagli:{" "}
                   {car.bags ?? m.notAvailable} · Carburante:{" "}
                   {car.fuelType ?? m.notAvailable}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-lg font-semibold">{price ?? m.notAvailable}</p>
+                <p className="text-xl font-semibold text-[var(--ink)]">
+                  {price ?? m.notAvailable}
+                </p>
                 <Link
                   href={`/book?kind=car&externalId=${encodeURIComponent(car.externalId)}`}
-                  className="mt-2 inline-block rounded-md bg-teal-900 px-3 py-2 text-xs font-semibold uppercase text-white"
+                  className={`${btnPrimaryClass} mt-3 !px-4 !py-2 text-xs`}
                 >
                   {m.select}
                 </Link>

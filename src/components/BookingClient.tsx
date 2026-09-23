@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { btnPrimaryClass, cardClass } from "@/components/ui";
 import { t } from "@/lib/i18n";
 
 type Props = {
@@ -36,7 +37,8 @@ export function BookingClient({
           setStripeStatus(
             data.status === "configured"
               ? `Stripe: configured (webhook: ${data.webhook ?? "n/d"})`
-              : data.message || "Stripe: non configurato",
+              : data.message ||
+                  "Checkout non disponibile: manca STRIPE_PUBLISHABLE_KEY (e/o secret). Nessun pagamento simulato.",
           );
         } catch {
           setStripeStatus("Stripe: stato non verificabile");
@@ -97,21 +99,24 @@ export function BookingClient({
   }
 
   return (
-    <div className="mx-auto max-w-lg rounded-2xl border border-teal-900/10 bg-white/80 p-6">
-      <h1 className="font-display text-2xl text-teal-950">Prenotazione</h1>
-      <p className="mt-2 text-sm text-stone-600">
+    <div className={`${cardClass} mx-auto max-w-lg p-6 sm:p-8`}>
+      <h1 className="font-display text-3xl text-[var(--ink)]">Prenotazione</h1>
+      <p className="mt-2 text-sm text-[var(--ink-soft)]">
         Tipo: {kind} · ID: {externalId}
       </p>
-      <p className="mt-3 text-sm text-stone-600">
+      <p className="mt-3 text-sm leading-relaxed text-[var(--ink-soft)]">
         Il booking reale viene eseguito solo se provider viaggio e Stripe sono
         configurati. Nessuna prenotazione o pagamento simulato.
       </p>
       {stripeStatus ? (
-        <p className="mt-2 text-xs text-stone-500" role="status">
+        <p
+          className="mt-3 rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-xs text-[var(--muted)]"
+          role="status"
+        >
           {stripeStatus}
         </p>
       ) : null}
-      <label className="mt-5 flex items-start gap-2 text-sm">
+      <label className="mt-6 flex items-start gap-3 text-sm text-[var(--ink-soft)]">
         <input
           type="checkbox"
           checked={confirmed}
@@ -124,20 +129,20 @@ export function BookingClient({
         type="button"
         disabled={loading || !confirmed}
         onClick={() => void start()}
-        className="mt-4 w-full rounded-md bg-teal-900 px-4 py-3 text-sm font-semibold uppercase tracking-wide text-white disabled:opacity-50"
+        className={`${btnPrimaryClass} mt-5 w-full`}
       >
         {loading ? "…" : "Avvia prenotazione"}
       </button>
       {result && (
         <p
-          className="mt-4 rounded-md border border-amber-700/20 bg-amber-50 px-3 py-2 text-sm text-amber-950"
+          className="mt-4 rounded-xl border border-amber-700/25 bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--warn-ink)]"
           role="status"
         >
           {result}
         </p>
       )}
       {paymentHint && (
-        <p className="mt-2 text-xs text-stone-600" role="note">
+        <p className="mt-2 text-xs text-[var(--muted)]" role="note">
           {paymentHint}
         </p>
       )}

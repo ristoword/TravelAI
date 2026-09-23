@@ -1,16 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { AirportInput } from "@/components/AirportInput";
+import {
+  IconCar,
+  IconHotel,
+  IconPackage,
+  IconPlane,
+  btnPrimaryClass,
+  cardClass,
+  fieldClass,
+  labelClass,
+} from "@/components/ui";
 import { t } from "@/lib/i18n";
 
 type Tab = "flights" | "package" | "hotels" | "cars";
-
-const fieldClass =
-  "w-full rounded-md border border-teal-900/20 bg-white/80 px-3 py-2.5 text-sm text-stone-900 shadow-sm placeholder:text-stone-400 focus:border-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-700/30";
-
-const labelClass = "mb-1 block text-xs font-medium uppercase tracking-wide text-teal-900/70";
 
 export function SearchTabs() {
   const m = t("it");
@@ -19,11 +24,11 @@ export function SearchTabs() {
   const baseId = "search-tabs";
   const airportHint = m.autocompleteNotConfigured;
 
-  const tabs: { id: Tab; label: string }[] = [
-    { id: "flights", label: m.tabFlights },
-    { id: "package", label: m.tabPackage },
-    { id: "hotels", label: m.tabHotels },
-    { id: "cars", label: m.tabCars },
+  const tabs: { id: Tab; label: string; icon: ReactNode }[] = [
+    { id: "flights", label: m.tabFlights, icon: <IconPlane /> },
+    { id: "package", label: m.tabPackage, icon: <IconPackage /> },
+    { id: "hotels", label: m.tabHotels, icon: <IconHotel /> },
+    { id: "cars", label: m.tabCars, icon: <IconCar /> },
   ];
 
   function go(path: string, params: Record<string, string>) {
@@ -33,10 +38,14 @@ export function SearchTabs() {
 
   return (
     <section
-      className="animate-fade-up rounded-2xl border border-teal-900/10 bg-white/70 p-4 shadow-[0_20px_60px_-30px_rgba(15,61,62,0.45)] backdrop-blur-md sm:p-6"
+      className={`${cardClass} p-4 backdrop-blur-md sm:p-6`}
       aria-label="Ricerca viaggio"
     >
-      <div role="tablist" aria-label="Tipo di ricerca" className="mb-5 flex flex-wrap gap-2">
+      <div
+        role="tablist"
+        aria-label="Tipo di ricerca"
+        className="mb-6 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {tabs.map((item) => {
           const selected = tab === item.id;
           return (
@@ -47,14 +56,15 @@ export function SearchTabs() {
               id={`${baseId}-${item.id}`}
               aria-selected={selected}
               aria-controls={`${baseId}-panel`}
-              className={`rounded-md px-3 py-2 text-sm font-semibold uppercase tracking-wide transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-800 ${
+              className={`tab-pill inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
                 selected
-                  ? "bg-teal-900 text-white"
-                  : "bg-teal-900/5 text-teal-950 hover:bg-teal-900/10"
+                  ? "bg-[var(--accent)] text-white shadow-[0_10px_24px_-12px_rgba(13,92,99,0.8)]"
+                  : "bg-[var(--accent-soft)] text-[var(--accent)] hover:bg-[rgba(13,92,99,0.16)]"
               }`}
               onClick={() => setTab(item.id)}
             >
-              {item.label}
+              {item.icon}
+              <span>{item.label}</span>
             </button>
           );
         })}
@@ -80,7 +90,7 @@ export function SearchTabs() {
             }}
           >
             <div className="sm:col-span-2 lg:col-span-4">
-              <p className="text-xs text-stone-600" role="note">
+              <p className="text-xs text-[var(--muted)]" role="note">
                 {airportHint}
               </p>
             </div>
@@ -163,7 +173,7 @@ export function SearchTabs() {
             </div>
             <fieldset className="sm:col-span-2">
               <legend className={labelClass}>Tipo viaggio</legend>
-              <div className="flex flex-wrap gap-3 text-sm">
+              <div className="flex flex-wrap gap-4 text-sm text-[var(--ink-soft)]">
                 <label className="flex items-center gap-2">
                   <input type="radio" name="tripType" value="roundtrip" defaultChecked />
                   {m.roundTrip}
@@ -179,10 +189,7 @@ export function SearchTabs() {
               </div>
             </fieldset>
             <div className="flex items-end sm:col-span-2 lg:col-span-4">
-              <button
-                type="submit"
-                className="w-full rounded-md bg-teal-900 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-teal-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-800 sm:w-auto"
-              >
+              <button type="submit" className={`${btnPrimaryClass} w-full sm:w-auto`}>
                 {m.searchFlights}
               </button>
             </div>
@@ -294,10 +301,7 @@ export function SearchTabs() {
               />
             </div>
             <div className="flex items-end sm:col-span-2 lg:col-span-3">
-              <button
-                type="submit"
-                className="w-full rounded-md bg-teal-900 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white sm:w-auto"
-              >
+              <button type="submit" className={`${btnPrimaryClass} w-full sm:w-auto`}>
                 {m.searchPackage}
               </button>
             </div>
@@ -381,10 +385,7 @@ export function SearchTabs() {
               />
             </div>
             <div className="flex items-end sm:col-span-2">
-              <button
-                type="submit"
-                className="w-full rounded-md bg-teal-900 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white sm:w-auto"
-              >
+              <button type="submit" className={`${btnPrimaryClass} w-full sm:w-auto`}>
                 {m.searchHotels}
               </button>
             </div>
@@ -487,10 +488,7 @@ export function SearchTabs() {
               />
             </div>
             <div className="flex items-end sm:col-span-2">
-              <button
-                type="submit"
-                className="w-full rounded-md bg-teal-900 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white sm:w-auto"
-              >
+              <button type="submit" className={`${btnPrimaryClass} w-full sm:w-auto`}>
                 {m.searchCars}
               </button>
             </div>

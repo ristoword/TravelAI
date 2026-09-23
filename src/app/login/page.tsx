@@ -1,22 +1,33 @@
 import Link from "next/link";
 import { LoginForm } from "@/components/LoginForm";
+import { cardClass } from "@/components/ui";
 import { t } from "@/lib/i18n";
 
 export default function LoginPage() {
   const m = t("it");
   return (
     <main className="mx-auto flex min-h-full w-full max-w-lg flex-col gap-6 px-5 py-10">
-      <Link href="/" className="font-display text-xl text-teal-950">
+      <Link
+        href="/"
+        className="font-display text-2xl text-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+      >
         {m.brand}
       </Link>
-      <h1 className="text-2xl font-semibold">{m.login}</h1>
-      <LoginForm />
-      <p className="text-sm text-stone-600">
-        <Link href="/register" className="underline">
+      <div className={`${cardClass} p-6 sm:p-8`}>
+        <h1 className="font-display text-3xl text-[var(--ink)]">{m.login}</h1>
+        <p className="mt-2 text-sm text-[var(--ink-soft)]">
+          Accedi al tuo account TravelAI.
+        </p>
+        <div className="mt-6">
+          <LoginForm />
+        </div>
+      </div>
+      <p className="text-sm text-[var(--ink-soft)]">
+        <Link href="/register" className="underline-offset-4 hover:underline">
           {m.register}
         </Link>
         {" · "}
-        <Link href="/reset-password" className="underline">
+        <Link href="/reset-password" className="underline-offset-4 hover:underline">
           {m.resetPassword}
         </Link>
       </p>

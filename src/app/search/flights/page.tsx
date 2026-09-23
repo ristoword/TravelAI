@@ -41,8 +41,8 @@ export default async function FlightSearchPage({ searchParams }: Props) {
     <main className="min-h-full">
       <SiteHeader signedIn={Boolean(session?.user)} />
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-10">
-        <h1 className="font-display text-3xl text-teal-950">Risultati voli</h1>
-        <p className="mt-1 text-sm text-stone-600">
+        <h1 className="font-display text-3xl text-[var(--ink)]">Risultati voli</h1>
+        <p className="mt-1 text-sm text-[var(--ink-soft)]">
           {origin || "?"} → {destination || "?"}
           {departDate ? ` · ${departDate}` : ""}
         </p>

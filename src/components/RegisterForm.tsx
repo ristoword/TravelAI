@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { btnPrimaryClass, fieldClass } from "@/components/ui";
 import { t } from "@/lib/i18n";
 
 export function RegisterForm() {
@@ -56,29 +57,35 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex w-full max-w-md flex-col gap-4">
-      <label className="flex flex-col gap-1 text-sm">
-        <span>{m.name}</span>
+      <label className="flex flex-col gap-1.5 text-sm text-[var(--ink-soft)]">
+        <span className="text-[11px] font-semibold uppercase tracking-wide">
+          {m.name}
+        </span>
         <input
           type="text"
           autoComplete="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="rounded border border-stone-300 bg-white px-3 py-2"
+          className={fieldClass}
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm">
-        <span>{m.email}</span>
+      <label className="flex flex-col gap-1.5 text-sm text-[var(--ink-soft)]">
+        <span className="text-[11px] font-semibold uppercase tracking-wide">
+          {m.email}
+        </span>
         <input
           type="email"
           autoComplete="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded border border-stone-300 bg-white px-3 py-2"
+          className={fieldClass}
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm">
-        <span>{m.password}</span>
+      <label className="flex flex-col gap-1.5 text-sm text-[var(--ink-soft)]">
+        <span className="text-[11px] font-semibold uppercase tracking-wide">
+          {m.password}
+        </span>
         <input
           type="password"
           autoComplete="new-password"
@@ -86,7 +93,7 @@ export function RegisterForm() {
           minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded border border-stone-300 bg-white px-3 py-2"
+          className={fieldClass}
         />
       </label>
       {error ? (
@@ -95,15 +102,11 @@ export function RegisterForm() {
         </p>
       ) : null}
       {message ? (
-        <p role="status" className="text-sm text-teal-900">
+        <p role="status" className="text-sm text-[var(--accent)]">
           {message}
         </p>
       ) : null}
-      <button
-        type="submit"
-        disabled={pending}
-        className="rounded bg-teal-800 px-4 py-2 text-white disabled:opacity-60"
-      >
+      <button type="submit" disabled={pending} className={btnPrimaryClass}>
         {m.submitRegister}
       </button>
     </form>
