@@ -29,7 +29,7 @@ export function LoginForm() {
         setError("Credenziali non valide o database non configurato.");
         return;
       }
-      router.push("/profile");
+      router.push("/");
       router.refresh();
     } finally {
       setPending(false);
@@ -44,7 +44,7 @@ export function LoginForm() {
       setOauthMessage(m.oauthNotConfigured);
       return;
     }
-    await signIn(provider, { callbackUrl: "/profile" });
+    await signIn(provider, { callbackUrl: "/" });
   }
 
   return (

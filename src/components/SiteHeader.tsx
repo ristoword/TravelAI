@@ -5,6 +5,12 @@ type Props = {
   signedIn?: boolean;
 };
 
+const navLinkClass =
+  "rounded-lg px-3 py-2 text-[var(--ink-soft)] transition hover:bg-white/60 hover:text-[var(--ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
+
+const navCtaClass =
+  "rounded-xl bg-[var(--accent)] px-3.5 py-2 font-medium text-white transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
+
 export function SiteHeader({ signedIn }: Props) {
   const m = t("it");
   return (
@@ -16,40 +22,31 @@ export function SiteHeader({ signedIn }: Props) {
         {m.brand}
       </Link>
       <nav
-        className="flex flex-wrap items-center gap-1 text-sm sm:gap-2"
+        className="flex flex-wrap items-center justify-end gap-1 text-sm sm:gap-2"
         aria-label="Principale"
       >
-        <Link
-          href="/trips"
-          className="rounded-lg px-3 py-2 text-[var(--ink-soft)] transition hover:bg-white/60 hover:text-[var(--ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-        >
+        <Link href="/" className={navLinkClass}>
+          {m.home}
+        </Link>
+        <Link href="/" className={navLinkClass}>
+          {m.searchTrip}
+        </Link>
+        <Link href="/trips" className={navLinkClass}>
           {m.trips}
         </Link>
-        <Link
-          href="/compare"
-          className="rounded-lg px-3 py-2 text-[var(--ink-soft)] transition hover:bg-white/60 hover:text-[var(--ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-        >
+        <Link href="/compare" className={navLinkClass}>
           {m.compare}
         </Link>
         {signedIn ? (
-          <Link
-            href="/profile"
-            className="rounded-xl bg-[var(--accent)] px-3.5 py-2 font-medium text-white transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-          >
+          <Link href="/profile" className={navCtaClass}>
             {m.profile}
           </Link>
         ) : (
           <>
-            <Link
-              href="/login"
-              className="rounded-lg px-3 py-2 text-[var(--ink-soft)] transition hover:bg-white/60 hover:text-[var(--ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-            >
+            <Link href="/login" className={navLinkClass}>
               {m.login}
             </Link>
-            <Link
-              href="/register"
-              className="rounded-xl bg-[var(--accent)] px-3.5 py-2 font-medium text-white transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-            >
+            <Link href="/register" className={navCtaClass}>
               {m.register}
             </Link>
           </>

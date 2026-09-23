@@ -10,6 +10,8 @@ type Messages = {
   register: string;
   profile: string;
   logout: string;
+  home: string;
+  searchTrip: string;
   email: string;
   password: string;
   name: string;
@@ -90,6 +92,8 @@ const it: Messages = {
   register: "Registrati",
   profile: "Profilo",
   logout: "Esci",
+  home: "Home",
+  searchTrip: "Cerca viaggio",
   email: "Email",
   password: "Password",
   name: "Nome",
@@ -202,6 +206,8 @@ const catalog: Record<Locale, Messages> = {
     register: "Sign up",
     profile: "Profile",
     logout: "Log out",
+    home: "Home",
+    searchTrip: "Search trips",
   }),
   nl: localize(it, {
     heroTitle: "Jouw reis. Georganiseerd door AI.",

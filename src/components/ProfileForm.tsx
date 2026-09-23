@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { btnGhostClass, btnPrimaryClass, cardClass, fieldClass } from "@/components/ui";
 import { locales, t } from "@/lib/i18n";
@@ -23,26 +24,32 @@ export function ProfileForm() {
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const res = await fetch("/api/profile");
-      if (res.status === 401) {
-        router.push("/login");
-        return;
-      }
-      const data = await res.json();
-      if (!res.ok) {
-        if (!cancelled) setError(data?.error?.message ?? "Errore profilo");
+      try {
+        const res = await fetch("/api/profile");
+        if (res.status === 401) {
+          router.push("/login");
+          return;
+        }
+        const data = await res.json();
+        if (!res.ok) {
+          if (!cancelled) setError(data?.error?.message ?? "Errore profilo");
+          return;
+        }
+        if (!cancelled) {
+          setUser(data.user);
+          setName(data.user.name ?? "");
+          setLocale(data.user.locale ?? "it");
+        }
+      } catch {
+        if (!cancelled) setError("Impossibile caricare il profilo.");
+      } finally {
         if (!cancelled) setLoading(false);
-        return;
-      }
-      if (!cancelled) {
-        setUser(data.user);
-        setName(data.user.name ?? "");
-        setLocale(data.user.locale ?? "it");
-        setLoading(false);
       }
     })();
     return () => {
@@ -54,24 +61,39 @@ export function ProfileForm() {
     e.preventDefault();
     setError(null);
     setStatus(null);
-    const res = await fetch("/api/profile", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name || null, locale }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      setError(data?.error?.message ?? "Aggiornamento non riuscito");
-      return;
+    setSaving(true);
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name || null, locale }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        setError(data?.error?.message ?? "Aggiornamento non riuscito");
+        return;
+      }
+      setUser(data.user);
+      setStatus("Profilo aggiornato.");
+    } catch {
+      setError("Aggiornamento non riuscito. Riprova.");
+    } finally {
+      setSaving(false);
     }
-    setUser(data.user);
-    setStatus("Profilo aggiornato.");
   }
 
   async function onLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/");
-    router.refresh();
+    setError(null);
+    setLoggingOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      // Always leave the session UI even if the request fails.
+    } finally {
+      router.push("/");
+      router.refresh();
+      setLoggingOut(false);
+    }
   }
 
   if (loading) {
@@ -80,9 +102,14 @@ export function ProfileForm() {
 
   if (!user) {
     return (
-      <p role="alert" className="text-sm text-red-700">
-        {error ?? "Profilo non disponibile"}
-      </p>
+      <div className="flex flex-col gap-4">
+        <p role="alert" className="text-sm text-red-700">
+          {error ?? "Profilo non disponibile"}
+        </p>
+        <Link href="/" className={btnPrimaryClass}>
+          {m.searchTrip}
+        </Link>
+      </div>
     );
   }
 
@@ -100,6 +127,17 @@ export function ProfileForm() {
           {user.emailVerified ? "sì" : "no"}
         </p>
       </div>
+      <nav
+        className="flex flex-wrap gap-2 text-sm"
+        aria-label="Scorciatoie profilo"
+      >
+        <Link href="/" className={btnGhostClass}>
+          {m.searchTrip}
+        </Link>
+        <Link href="/trips" className={btnGhostClass}>
+          {m.trips}
+        </Link>
+      </nav>
       <form onSubmit={onSave} className="flex flex-col gap-4">
         <label className="flex flex-col gap-1.5 text-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ink-soft)]">
@@ -110,6 +148,7 @@ export function ProfileForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className={fieldClass}
+            disabled={saving}
           />
         </label>
         <label className="flex flex-col gap-1.5 text-sm">
@@ -120,6 +159,7 @@ export function ProfileForm() {
             value={locale}
             onChange={(e) => setLocale(e.target.value)}
             className={fieldClass}
+            disabled={saving}
           >
             {locales.map((code) => (
               <option key={code} value={code}>
@@ -138,12 +178,17 @@ export function ProfileForm() {
             {status}
           </p>
         ) : null}
-        <button type="submit" className={btnPrimaryClass}>
-          {m.updateProfile}
+        <button type="submit" disabled={saving} className={btnPrimaryClass}>
+          {saving ? "Salvataggio…" : m.updateProfile}
         </button>
       </form>
-      <button type="button" onClick={onLogout} className={btnGhostClass}>
-        {m.logout}
+      <button
+        type="button"
+        onClick={onLogout}
+        disabled={loggingOut}
+        className={btnGhostClass}
+      >
+        {loggingOut ? "Uscita…" : m.logout}
       </button>
     </div>
   );

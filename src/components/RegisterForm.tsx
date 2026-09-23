@@ -47,7 +47,7 @@ export function RegisterForm() {
         redirect: false,
       });
       if (!login?.error) {
-        router.push("/profile");
+        router.push("/");
         router.refresh();
       }
     } finally {
