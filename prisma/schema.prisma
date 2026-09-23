@@ -1,0 +1,791 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  PRICE_CHANGED
+  PAYMENT_PENDING
+  PAID
+  BOOKING_PENDING
+  CONFIRMED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  REQUIRES_ACTION
+  SUCCEEDED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum OrderStatus {
+  PENDING
+  PRICE_CHANGED
+  PAYMENT_PENDING
+  PAID
+  BOOKING_PENDING
+  CONFIRMED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum TripItemType {
+  FLIGHT
+  HOTEL
+  CAR
+  ACTIVITY
+  CUSTOM
+}
+
+enum NotificationChannel {
+  EMAIL
+  IN_APP
+  PUSH
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  SKIPPED
+}
+
+enum ProviderKind {
+  FLIGHT
+  HOTEL
+  CAR
+  ACTIVITY
+  OTHER
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  name          String?
+  image         String?
+  locale        String    @default("it")
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  accounts              Account[]
+  sessions              Session[]
+  travelers             Traveler[]
+  trips                 Trip[]
+  flightBookings        FlightBooking[]
+  hotelBookings         HotelBooking[]
+  carBookings           CarBooking[]
+  activityBookings      ActivityBooking[]
+  payments              Payment[]
+  orders                Order[]
+  notifications         Notification[]
+  favorites             Favorite[]
+  reviews               Review[]
+  auditLogs             AuditLog[]
+  passwordResetTokens   PasswordResetToken[]
+  emailVerificationTokens EmailVerificationToken[]
+
+  @@index([role])
+  @@index([deletedAt])
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Traveler {
+  id          String    @id @default(uuid())
+  userId      String
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime?
+  nationality String?
+  documentType String?
+  documentNumber String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tripTravelers TripTraveler[]
+
+  @@index([userId])
+  @@index([deletedAt])
+}
+
+model Trip {
+  id          String    @id @default(uuid())
+  userId      String
+  title       String
+  description String?
+  startDate   DateTime?
+  endDate     DateTime?
+  destination String?
+  currency    String    @default("EUR")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tripTravelers TripTraveler[]
+  tripItems     TripItem[]
+  itineraries   Itinerary[]
+  orders        Order[]
+  favorites     Favorite[]
+  flightSearches FlightSearch[]
+  hotelSearches  HotelSearch[]
+  carSearches    CarSearch[]
+  activitySearches ActivitySearch[]
+
+  @@index([userId])
+  @@index([deletedAt])
+}
+
+model TripTraveler {
+  id         String   @id @default(uuid())
+  tripId     String
+  travelerId String
+  role       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  trip     Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  traveler Traveler @relation(fields: [travelerId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, travelerId])
+  @@index([tripId])
+  @@index([travelerId])
+}
+
+model FlightSearch {
+  id        String    @id @default(uuid())
+  userId    String?
+  tripId    String?
+  origin    String
+  destination String
+  departDate DateTime
+  returnDate DateTime?
+  adults    Int       @default(1)
+  cabinClass String?
+  currency  String    @default("EUR")
+  rawParams Json?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  trip    Trip?         @relation(fields: [tripId], references: [id], onDelete: SetNull)
+  offers  FlightOffer[]
+
+  @@index([tripId])
+  @@index([createdAt])
+  @@index([deletedAt])
+}
+
+model FlightOffer {
+  id             String   @id @default(uuid())
+  flightSearchId String
+  providerId     String?
+  externalId     String?
+  airline        String?
+  priceAmount    Decimal  @db.Decimal(12, 2)
+  currency       String   @default("EUR")
+  rawPayload     Json?
+  expiresAt      DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+
+  flightSearch FlightSearch    @relation(fields: [flightSearchId], references: [id], onDelete: Cascade)
+  provider     Provider?       @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  bookings     FlightBooking[]
+
+  @@index([flightSearchId])
+  @@index([providerId])
+  @@index([deletedAt])
+}
+
+model FlightBooking {
+  id            String        @id @default(uuid())
+  userId        String
+  flightOfferId String
+  orderId       String?
+  status        BookingStatus @default(PENDING)
+  pnr           String?
+  totalAmount   Decimal       @db.Decimal(12, 2)
+  currency      String        @default("EUR")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  flightOffer FlightOffer @relation(fields: [flightOfferId], references: [id], onDelete: Restrict)
+  order       Order?      @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  tripItems   TripItem[]
+
+  @@index([userId])
+  @@index([flightOfferId])
+  @@index([orderId])
+  @@index([status])
+  @@index([deletedAt])
+}
+
+model HotelSearch {
+  id           String    @id @default(uuid())
+  userId       String?
+  tripId       String?
+  location     String
+  checkIn      DateTime
+  checkOut     DateTime
+  adults       Int       @default(1)
+  rooms        Int       @default(1)
+  currency     String    @default("EUR")
+  rawParams    Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  trip   Trip?        @relation(fields: [tripId], references: [id], onDelete: SetNull)
+  offers HotelOffer[]
+
+  @@index([tripId])
+  @@index([createdAt])
+  @@index([deletedAt])
+}
+
+model HotelOffer {
+  id            String    @id @default(uuid())
+  hotelSearchId String
+  providerId    String?
+  externalId    String?
+  hotelName     String?
+  priceAmount   Decimal   @db.Decimal(12, 2)
+  currency      String    @default("EUR")
+  rawPayload    Json?
+  expiresAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  hotelSearch HotelSearch    @relation(fields: [hotelSearchId], references: [id], onDelete: Cascade)
+  provider    Provider?      @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  bookings    HotelBooking[]
+
+  @@index([hotelSearchId])
+  @@index([providerId])
+  @@index([deletedAt])
+}
+
+model HotelBooking {
+  id           String        @id @default(uuid())
+  userId       String
+  hotelOfferId String
+  orderId      String?
+  status       BookingStatus @default(PENDING)
+  confirmationCode String?
+  totalAmount  Decimal       @db.Decimal(12, 2)
+  currency     String        @default("EUR")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  deletedAt    DateTime?
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hotelOffer HotelOffer @relation(fields: [hotelOfferId], references: [id], onDelete: Restrict)
+  order      Order?     @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  tripItems  TripItem[]
+
+  @@index([userId])
+  @@index([hotelOfferId])
+  @@index([orderId])
+  @@index([status])
+  @@index([deletedAt])
+}
+
+model CarSearch {
+  id           String    @id @default(uuid())
+  userId       String?
+  tripId       String?
+  pickupLocation  String
+  dropoffLocation String?
+  pickupAt     DateTime
+  dropoffAt    DateTime
+  currency     String    @default("EUR")
+  rawParams    Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  trip   Trip?      @relation(fields: [tripId], references: [id], onDelete: SetNull)
+  offers CarOffer[]
+
+  @@index([tripId])
+  @@index([createdAt])
+  @@index([deletedAt])
+}
+
+model CarOffer {
+  id          String    @id @default(uuid())
+  carSearchId String
+  providerId  String?
+  externalId  String?
+  vendorName  String?
+  priceAmount Decimal   @db.Decimal(12, 2)
+  currency    String    @default("EUR")
+  rawPayload  Json?
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  carSearch CarSearch    @relation(fields: [carSearchId], references: [id], onDelete: Cascade)
+  provider  Provider?    @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  bookings  CarBooking[]
+
+  @@index([carSearchId])
+  @@index([providerId])
+  @@index([deletedAt])
+}
+
+model CarBooking {
+  id          String        @id @default(uuid())
+  userId      String
+  carOfferId  String
+  orderId     String?
+  status      BookingStatus @default(PENDING)
+  confirmationCode String?
+  totalAmount Decimal       @db.Decimal(12, 2)
+  currency    String        @default("EUR")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  carOffer  CarOffer  @relation(fields: [carOfferId], references: [id], onDelete: Restrict)
+  order     Order?    @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  tripItems TripItem[]
+
+  @@index([userId])
+  @@index([carOfferId])
+  @@index([orderId])
+  @@index([status])
+  @@index([deletedAt])
+}
+
+model ActivitySearch {
+  id          String    @id @default(uuid())
+  userId      String?
+  tripId      String?
+  location    String
+  activityDate DateTime?
+  adults      Int       @default(1)
+  currency    String    @default("EUR")
+  rawParams   Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  trip   Trip?           @relation(fields: [tripId], references: [id], onDelete: SetNull)
+  offers ActivityOffer[]
+
+  @@index([tripId])
+  @@index([createdAt])
+  @@index([deletedAt])
+}
+
+model ActivityOffer {
+  id               String    @id @default(uuid())
+  activitySearchId String
+  providerId       String?
+  externalId       String?
+  title            String?
+  priceAmount      Decimal   @db.Decimal(12, 2)
+  currency         String    @default("EUR")
+  rawPayload       Json?
+  expiresAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  activitySearch ActivitySearch    @relation(fields: [activitySearchId], references: [id], onDelete: Cascade)
+  provider       Provider?         @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  bookings       ActivityBooking[]
+
+  @@index([activitySearchId])
+  @@index([providerId])
+  @@index([deletedAt])
+}
+
+model ActivityBooking {
+  id              String        @id @default(uuid())
+  userId          String
+  activityOfferId String
+  orderId         String?
+  status          BookingStatus @default(PENDING)
+  confirmationCode String?
+  totalAmount     Decimal       @db.Decimal(12, 2)
+  currency        String        @default("EUR")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activityOffer ActivityOffer @relation(fields: [activityOfferId], references: [id], onDelete: Restrict)
+  order         Order?        @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  tripItems     TripItem[]
+
+  @@index([userId])
+  @@index([activityOfferId])
+  @@index([orderId])
+  @@index([status])
+  @@index([deletedAt])
+}
+
+model TripItem {
+  id                String       @id @default(uuid())
+  tripId            String
+  type              TripItemType
+  title             String
+  notes             String?
+  sortOrder         Int          @default(0)
+  flightBookingId   String?
+  hotelBookingId    String?
+  carBookingId      String?
+  activityBookingId String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  deletedAt         DateTime?
+
+  trip            Trip             @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  flightBooking   FlightBooking?   @relation(fields: [flightBookingId], references: [id], onDelete: SetNull)
+  hotelBooking    HotelBooking?    @relation(fields: [hotelBookingId], references: [id], onDelete: SetNull)
+  carBooking      CarBooking?      @relation(fields: [carBookingId], references: [id], onDelete: SetNull)
+  activityBooking ActivityBooking? @relation(fields: [activityBookingId], references: [id], onDelete: SetNull)
+  itineraryItems  ItineraryItem[]
+
+  @@index([tripId])
+  @@index([type])
+  @@index([deletedAt])
+}
+
+model Itinerary {
+  id          String    @id @default(uuid())
+  tripId      String
+  title       String
+  summary     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  trip  Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  days  ItineraryDay[]
+
+  @@index([tripId])
+  @@index([deletedAt])
+}
+
+model ItineraryDay {
+  id          String    @id @default(uuid())
+  itineraryId String
+  dayNumber   Int
+  date        DateTime?
+  title       String?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  itinerary Itinerary       @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
+  items     ItineraryItem[]
+
+  @@unique([itineraryId, dayNumber])
+  @@index([itineraryId])
+  @@index([deletedAt])
+}
+
+model ItineraryItem {
+  id             String    @id @default(uuid())
+  itineraryDayId String
+  tripItemId     String?
+  title          String
+  description    String?
+  startTime      DateTime?
+  endTime        DateTime?
+  sortOrder      Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  itineraryDay ItineraryDay @relation(fields: [itineraryDayId], references: [id], onDelete: Cascade)
+  tripItem     TripItem?    @relation(fields: [tripItemId], references: [id], onDelete: SetNull)
+
+  @@index([itineraryDayId])
+  @@index([tripItemId])
+  @@index([deletedAt])
+}
+
+model Payment {
+  id                    String        @id @default(uuid())
+  userId                String
+  orderId               String?
+  status                PaymentStatus @default(PENDING)
+  amount                Decimal       @db.Decimal(12, 2)
+  currency              String        @default("EUR")
+  stripePaymentIntentId String?       @unique
+  stripeChargeId        String?
+  stripeCustomerId      String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  deletedAt             DateTime?
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order Order? @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([orderId])
+  @@index([status])
+  @@index([deletedAt])
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  userId      String
+  tripId      String?
+  status      OrderStatus @default(PENDING)
+  totalAmount Decimal     @db.Decimal(12, 2)
+  currency    String      @default("EUR")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
+
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trip             Trip?             @relation(fields: [tripId], references: [id], onDelete: SetNull)
+  payments         Payment[]
+  flightBookings   FlightBooking[]
+  hotelBookings    HotelBooking[]
+  carBookings      CarBooking[]
+  activityBookings ActivityBooking[]
+
+  @@index([userId])
+  @@index([tripId])
+  @@index([status])
+  @@index([deletedAt])
+}
+
+model Provider {
+  id        String       @id @default(uuid())
+  code      String       @unique
+  name      String
+  kind      ProviderKind
+  isActive  Boolean      @default(false)
+  config    Json?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  deletedAt DateTime?
+
+  requests         ProviderRequest[]
+  responses        ProviderResponse[]
+  flightOffers     FlightOffer[]
+  hotelOffers      HotelOffer[]
+  carOffers        CarOffer[]
+  activityOffers   ActivityOffer[]
+
+  @@index([kind])
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+model ProviderRequest {
+  id           String   @id @default(uuid())
+  providerId   String
+  requestType  String
+  payload      Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  provider  Provider           @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  responses ProviderResponse[]
+
+  @@index([providerId])
+  @@index([createdAt])
+}
+
+model ProviderResponse {
+  id                String   @id @default(uuid())
+  providerId        String
+  providerRequestId String?
+  statusCode        Int?
+  payload           Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  provider        Provider         @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  providerRequest ProviderRequest? @relation(fields: [providerRequestId], references: [id], onDelete: SetNull)
+
+  @@index([providerId])
+  @@index([providerRequestId])
+  @@index([createdAt])
+}
+
+model Notification {
+  id        String              @id @default(uuid())
+  userId    String
+  channel   NotificationChannel
+  status    NotificationStatus  @default(PENDING)
+  subject   String?
+  body      String?
+  metadata  Json?
+  sentAt    DateTime?
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([deletedAt])
+}
+
+model Favorite {
+  id        String    @id @default(uuid())
+  userId    String
+  tripId    String?
+  label     String?
+  payload   Json?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trip Trip? @relation(fields: [tripId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([tripId])
+  @@index([deletedAt])
+}
+
+model Review {
+  id        String    @id @default(uuid())
+  userId    String
+  rating    Int
+  title     String?
+  body      String?
+  targetType String
+  targetId  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([targetType, targetId])
+  @@index([deletedAt])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  entity    String?
+  entityId  String?
+  ip        String?
+  userAgent String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}

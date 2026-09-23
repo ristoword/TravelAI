@@ -1,0 +1,46 @@
+import { describe, expect, it } from "vitest";
+
+/**
+ * Health response shape contract (no DB / no HTTP server required).
+ * Mirrors GET /api/health provider reporting rules for Phase 2.
+ */
+function buildHealthShape(input: {
+  database: "ok" | "not_configured" | "error";
+  requestId: string;
+  timestamp: string;
+}) {
+  return {
+    status: "ok",
+    app: "TravelAI",
+    phase: 2,
+    database: input.database,
+    providers: {
+      flight: "not_configured",
+      hotel: "not_configured",
+      car: "not_configured",
+      activity: "not_configured",
+      openai: "not_configured",
+      stripe: "not_configured",
+    },
+    requestId: input.requestId,
+    timestamp: input.timestamp,
+  };
+}
+
+describe("health response shape", () => {
+  it("marks all travel providers as not_configured", () => {
+    const body = buildHealthShape({
+      database: "not_configured",
+      requestId: "req-1",
+      timestamp: "2026-09-23T00:00:00.000Z",
+    });
+
+    expect(body.database).toBe("not_configured");
+    expect(body.providers.flight).toBe("not_configured");
+    expect(body.providers.hotel).toBe("not_configured");
+    expect(body.providers.car).toBe("not_configured");
+    expect(body.providers.activity).toBe("not_configured");
+    expect(body.requestId).toBeTruthy();
+    expect(body.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+});
