@@ -5,6 +5,7 @@ import {
   EnvHotelProvider,
 } from "@/lib/providers/env-adapters";
 import { isAmadeusConfigured } from "@/lib/providers/amadeus/config";
+import { isStripeConfigured } from "@/lib/stripe";
 import type {
   AirportAutocompleteProvider,
   CarRentalProvider,
@@ -47,14 +48,10 @@ export function getTravelProviderStatuses() {
     airports: providerStatus(airportProvider.isConfigured()),
     activity: "not_configured" as ProviderStatus,
     openai: providerStatus(Boolean(process.env.OPENAI_API_KEY?.trim())),
-    stripe: providerStatus(Boolean(process.env.STRIPE_SECRET_KEY?.trim())),
+    /** Requires STRIPE_SECRET_KEY + STRIPE_PUBLISHABLE_KEY (webhook is separate). */
+    stripe: providerStatus(isStripeConfigured()),
     amadeus: providerStatus(amadeus),
   };
 }
 
-export function isStripeConfigured(): boolean {
-  return Boolean(
-    process.env.STRIPE_SECRET_KEY?.trim() &&
-      process.env.STRIPE_PUBLISHABLE_KEY?.trim(),
-  );
-}
+export { isStripeConfigured };

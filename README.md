@@ -22,7 +22,9 @@ Alias legacy opzionali: `FLIGHT_PROVIDER_API_KEY` / `HOTEL_PROVIDER_API_KEY` / `
 
 Autocomplete aeroporti: dataset pubblico **OurAirports** (download automatico). Opzionali: `AIRPORT_AUTOCOMPLETE_BASE_URL`, `AIRPORT_DATASET_PATH`.
 
-AI / pagamenti: `OPENAI_API_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`.
+AI / pagamenti: `OPENAI_API_KEY`, `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY` (obbligatorie insieme), `STRIPE_WEBHOOK_SECRET` (firma webhook).
+
+Health `stripe: configured` solo se secret **e** publishable sono presenti.
 
 ## Cosa funziona davvero
 

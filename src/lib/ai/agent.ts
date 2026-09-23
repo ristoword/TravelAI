@@ -114,6 +114,22 @@ export const aiToolDefinitions = [
   {
     type: "function" as const,
     function: {
+      name: "get_offer_details",
+      description:
+        "Get offer details by kind (flight|hotel|car) and externalId via the provider adapter.",
+      parameters: {
+        type: "object",
+        properties: {
+          kind: { type: "string", enum: ["flight", "hotel", "car"] },
+          externalId: { type: "string" },
+        },
+        required: ["kind", "externalId"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
       name: "verifyPrice",
       description: "Verify a price against the provider for flight, hotel, or car.",
       parameters: {
@@ -132,19 +148,37 @@ export const aiToolDefinitions = [
 
 export type AiToolName =
   | "searchFlights"
+  | "search_flights"
   | "searchHotels"
+  | "search_hotels"
   | "searchCars"
+  | "search_cars"
   | "getHotelDetails"
   | "getFlightDetails"
+  | "get_offer_details"
   | "compareHotels"
-  | "verifyPrice";
+  | "verifyPrice"
+  | "verify_price";
+
+function normalizeToolName(name: string): AiToolName | string {
+  const map: Record<string, AiToolName> = {
+    search_flights: "searchFlights",
+    search_hotels: "searchHotels",
+    search_cars: "searchCars",
+    get_offer_details: "get_offer_details",
+    verify_price: "verifyPrice",
+  };
+  return map[name] ?? name;
+}
 
 export async function executeAiTool(
   name: string,
   args: Record<string, unknown>,
 ): Promise<ProviderResult<unknown>> {
-  switch (name as AiToolName) {
-    case "searchFlights": {
+  const tool = normalizeToolName(name);
+  switch (tool as AiToolName) {
+    case "searchFlights":
+    case "search_flights": {
       const params: FlightSearchParams = {
         origin: String(args.origin ?? ""),
         destination: String(args.destination ?? ""),
@@ -155,7 +189,8 @@ export async function executeAiTool(
       };
       return getFlightProvider().search(params);
     }
-    case "searchHotels": {
+    case "searchHotels":
+    case "search_hotels": {
       const params: HotelSearchParams = {
         destination: String(args.destination ?? ""),
         checkIn: String(args.checkIn ?? ""),
@@ -165,7 +200,8 @@ export async function executeAiTool(
       };
       return getHotelProvider().search(params);
     }
-    case "searchCars": {
+    case "searchCars":
+    case "search_cars": {
       const params: CarSearchParams = {
         pickupLocation: String(args.pickupLocation ?? ""),
         dropoffLocation: args.dropoffLocation
@@ -181,6 +217,13 @@ export async function executeAiTool(
       return getHotelProvider().getDetails(String(args.externalId ?? ""));
     case "getFlightDetails":
       return getFlightProvider().getDetails(String(args.externalId ?? ""));
+    case "get_offer_details": {
+      const kind = String(args.kind ?? args.offerKind ?? "hotel");
+      const id = String(args.externalId ?? "");
+      if (kind === "flight") return getFlightProvider().getDetails(id);
+      if (kind === "car") return getCarRentalProvider().getDetails(id);
+      return getHotelProvider().getDetails(id);
+    }
     case "compareHotels": {
       const ids = Array.isArray(args.externalIds)
         ? args.externalIds.map(String)
@@ -208,7 +251,8 @@ export async function executeAiTool(
       }
       return { ok: true, data: results };
     }
-    case "verifyPrice": {
+    case "verifyPrice":
+    case "verify_price": {
       const input: PriceVerification = {
         kind: args.kind as PriceVerification["kind"],
         externalId: String(args.externalId ?? ""),
@@ -267,7 +311,10 @@ export async function runAiChat(messages: ChatMessage[]): Promise<
           {
             role: "system",
             content:
-              "Sei l'assistente TravelAI. Usa solo i tool per cercare voli/hotel/auto. Non inventare offerte, prezzi, foto o disponibilità. Se un provider non è configurato, dillo chiaramente.",
+              "Sei l'assistente TravelAI. Usa SOLO i tool (searchFlights/searchHotels/searchCars/get_offer_details/verifyPrice e alias) per dati di viaggio. " +
+              "Non inventare mai voli, hotel, auto, prezzi, foto, disponibilità o prenotazioni. " +
+              "Se un tool restituisce provider_not_configured o Amadeus non configurato, dillo esplicitamente all'utente e invita a usare il form manuale o ad attendere le credenziali sandbox. " +
+              "Prima di booking o pagamento chiedi sempre conferma esplicita dell'utente. Non dichiarare pagamenti riusciti.",
           },
           ...messages,
         ],
@@ -320,7 +367,7 @@ export async function runAiChat(messages: ChatMessage[]): Promise<
       {
         role: "system",
         content:
-          "Sei l'assistente TravelAI. Usa solo i tool. Non inventare dati.",
+          "Sei l'assistente TravelAI. Usa solo i risultati dei tool. Se vedi provider_not_configured, dillo all'utente senza inventare offerte. Non dichiarare pagamenti o prenotazioni riuscite senza conferma esplicita e provider reale.",
       },
       ...messages,
       msg,

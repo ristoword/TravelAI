@@ -25,6 +25,9 @@ export default async function BookPage({ searchParams }: Props) {
       ? kindRaw
       : null;
   const externalId = one(sp.externalId);
+  const amountRaw = one(sp.amount);
+  const currency = one(sp.currency) || "EUR";
+  const expectedAmount = amountRaw ? Number(amountRaw) : undefined;
 
   return (
     <main className="min-h-full">
@@ -35,7 +38,16 @@ export default async function BookPage({ searchParams }: Props) {
             Parametri prenotazione mancanti. Seleziona un&apos;offerta dai risultati.
           </p>
         ) : (
-          <BookingClient kind={kind} externalId={externalId} />
+          <BookingClient
+            kind={kind}
+            externalId={externalId}
+            expectedAmount={
+              typeof expectedAmount === "number" && Number.isFinite(expectedAmount)
+                ? expectedAmount
+                : undefined
+            }
+            currency={currency.length === 3 ? currency : "EUR"}
+          />
         )}
       </div>
     </main>
