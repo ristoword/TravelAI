@@ -11,13 +11,36 @@ import {
   isGoogleOAuthConfigured,
 } from "@/lib/oauth";
 
+const useSecureCookies =
+  process.env.NODE_ENV === "production" ||
+  process.env.AUTH_URL?.startsWith("https://") === true ||
+  process.env.NEXTAUTH_URL?.startsWith("https://") === true;
+
 /**
  * Edge-safe auth config pieces. Credentials authorize runs on Node.
  * JWT sessions are required for Credentials provider compatibility.
+ * trustHost: required behind Railway/proxy (also set AUTH_TRUST_HOST=true).
  */
 export const authConfig = {
   trustHost: true,
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
+  },
+  useSecureCookies,
+  cookies: {
+    sessionToken: {
+      name: useSecureCookies
+        ? "__Secure-authjs.session-token"
+        : "authjs.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax" as const,
+        path: "/",
+        secure: useSecureCookies,
+      },
+    },
+  },
   pages: {
     signIn: "/login",
   },
