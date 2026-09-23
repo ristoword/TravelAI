@@ -23,165 +23,223 @@ type Messages = {
   oauthNotConfigured: string;
   emailNotConfigured: string;
   homeCtaHonest: string;
+  tabFlights: string;
+  tabPackage: string;
+  tabHotels: string;
+  tabCars: string;
+  from: string;
+  to: string;
+  depart: string;
+  return: string;
+  passengers: string;
+  cabinClass: string;
+  baggage: string;
+  roundTrip: string;
+  oneWay: string;
+  multiCity: string;
+  searchFlights: string;
+  searchPackage: string;
+  searchHotels: string;
+  searchCars: string;
+  destination: string;
+  checkIn: string;
+  checkOut: string;
+  guests: string;
+  rooms: string;
+  hotelPrefs: string;
+  pickup: string;
+  dropoff: string;
+  pickupTime: string;
+  dropoffTime: string;
+  driverAge: string;
+  tellWhere: string;
+  tellWherePlaceholder: string;
+  providerNotConfigured: string;
+  serviceUnavailable: string;
+  autocompleteNotConfigured: string;
+  searchingFlights: string;
+  searchingHotels: string;
+  searchingCars: string;
+  fetchError: string;
+  retry: string;
+  select: string;
+  seeHotel: string;
+  book: string;
+  imageUnavailable: string;
+  notAvailable: string;
+  changeFlight: string;
+  changeHotel: string;
+  total: string;
+  compare: string;
+  trips: string;
+  aiNotConfigured: string;
+  filters: string;
+  sortPriceAsc: string;
+  sortPriceDesc: string;
+  sortDuration: string;
 };
 
+const it: Messages = {
+  brand: "TravelAI",
+  heroTitle: "Il tuo viaggio. Organizzato dall'AI.",
+  heroSubtitle:
+    "Cerca, confronta e organizza voli, hotel e auto in un unico posto.",
+  notAvailableYet:
+    "I risultati di ricerca arrivano solo da provider configurati. Nessuna offerta inventata.",
+  login: "Accedi",
+  register: "Registrati",
+  profile: "Profilo",
+  logout: "Esci",
+  email: "Email",
+  password: "Password",
+  name: "Nome",
+  submitLogin: "Accedi",
+  submitRegister: "Crea account",
+  updateProfile: "Salva profilo",
+  resetPassword: "Reimposta password",
+  requestReset: "Invia link di reset",
+  confirmReset: "Imposta nuova password",
+  verifyEmail: "Verifica email",
+  oauthNotConfigured: "OAuth non configurato",
+  emailNotConfigured: "Provider email non configurato",
+  homeCtaHonest:
+    "La ricerca è implementata: se un provider non è configurato vedrai uno stato chiaro, non dati finti.",
+  tabFlights: "Voli",
+  tabPackage: "Voli + Hotel",
+  tabHotels: "Hotel",
+  tabCars: "Auto",
+  from: "Da",
+  to: "A",
+  depart: "Andata",
+  return: "Ritorno",
+  passengers: "Passeggeri",
+  cabinClass: "Classe",
+  baggage: "Bagaglio",
+  roundTrip: "Andata e ritorno",
+  oneWay: "Solo andata",
+  multiCity: "Multi-city",
+  searchFlights: "Cerca voli",
+  searchPackage: "Cerca volo + hotel",
+  searchHotels: "Cerca hotel",
+  searchCars: "Cerca auto",
+  destination: "Destinazione",
+  checkIn: "Check-in",
+  checkOut: "Check-out",
+  guests: "Ospiti",
+  rooms: "Camere",
+  hotelPrefs: "Preferenze hotel",
+  pickup: "Ritiro",
+  dropoff: "Riconsegna",
+  pickupTime: "Ora ritiro",
+  dropoffTime: "Ora riconsegna",
+  driverAge: "Età conducente",
+  tellWhere: "Dimmi dove vuoi andare.",
+  tellWherePlaceholder: "Es. weekend a Lisbona a giugno…",
+  providerNotConfigured: "Provider non configurato",
+  serviceUnavailable: "Servizio non disponibile",
+  autocompleteNotConfigured:
+    "Autocomplete aeroporti non configurato — digita codice o città manualmente.",
+  searchingFlights: "Searching flights…",
+  searchingHotels: "Searching hotels…",
+  searchingCars: "Searching rental cars…",
+  fetchError: "Non siamo riusciti a recuperare i risultati in questo momento.",
+  retry: "Riprova",
+  select: "Seleziona",
+  seeHotel: "Vedi hotel",
+  book: "Prenota",
+  imageUnavailable: "Immagine non disponibile",
+  notAvailable: "Non disponibile",
+  changeFlight: "Cambia volo",
+  changeHotel: "Cambia hotel",
+  total: "Totale",
+  compare: "Confronta",
+  trips: "I miei viaggi",
+  aiNotConfigured: "INTEGRAZIONE NON CONFIGURATA — API KEY NECESSARIA",
+  filters: "Filtri",
+  sortPriceAsc: "Prezzo ↑",
+  sortPriceDesc: "Prezzo ↓",
+  sortDuration: "Durata",
+};
+
+function localize(base: Messages, overrides: Partial<Messages>): Messages {
+  return { ...base, ...overrides };
+}
+
 const catalog: Record<Locale, Messages> = {
-  it: {
-    brand: "TravelAI",
-    heroTitle: "Il tuo viaggio. Organizzato dall’AI.",
-    heroSubtitle:
-      "Piattaforma in costruzione: autenticazione e database sono attivi in questa fase.",
-    notAvailableYet:
-      "Ricerca voli, hotel e assistente AI non sono ancora disponibili (fasi successive). Nessuna offerta o prezzo inventato.",
-    login: "Accedi",
-    register: "Registrati",
-    profile: "Profilo",
-    logout: "Esci",
-    email: "Email",
-    password: "Password",
-    name: "Nome",
-    submitLogin: "Accedi",
-    submitRegister: "Crea account",
-    updateProfile: "Salva profilo",
-    resetPassword: "Reimposta password",
-    requestReset: "Invia link di reset",
-    confirmReset: "Imposta nuova password",
-    verifyEmail: "Verifica email",
-    oauthNotConfigured: "OAuth non configurato",
-    emailNotConfigured: "Provider email non configurato",
-    homeCtaHonest:
-      "Puoi registrarti e gestire il profilo. La ricerca e le prenotazioni arriveranno dopo.",
-  },
-  en: {
-    brand: "TravelAI",
+  it,
+  en: localize(it, {
     heroTitle: "Your trip. Organized by AI.",
-    heroSubtitle:
-      "Platform under construction: authentication and database are active in this phase.",
-    notAvailableYet:
-      "Flight/hotel search and the AI assistant are not available yet (later phases). No invented offers or prices.",
+    heroSubtitle: "Search, compare and organize flights, hotels and cars in one place.",
+    tabFlights: "Flights",
+    tabPackage: "Flight + Hotel",
+    tabHotels: "Hotels",
+    tabCars: "Cars",
+    searchFlights: "Search flights",
+    searchPackage: "Search flight + hotel",
+    searchHotels: "Search hotels",
+    searchCars: "Search cars",
+    tellWhere: "Tell me where you want to go.",
+    providerNotConfigured: "Provider not configured",
+    serviceUnavailable: "Service unavailable",
+    fetchError: "We couldn't retrieve results right now.",
+    retry: "Retry",
+    select: "Select",
+    seeHotel: "View hotel",
+    book: "Book",
+    imageUnavailable: "Image unavailable",
+    notAvailable: "Not available",
+    changeFlight: "Change flight",
+    changeHotel: "Change hotel",
+    total: "Total",
+    compare: "Compare",
+    trips: "My trips",
+    aiNotConfigured: "INTEGRATION NOT CONFIGURED — API KEY REQUIRED",
+    filters: "Filters",
     login: "Log in",
     register: "Sign up",
     profile: "Profile",
     logout: "Log out",
-    email: "Email",
-    password: "Password",
-    name: "Name",
-    submitLogin: "Log in",
-    submitRegister: "Create account",
-    updateProfile: "Save profile",
-    resetPassword: "Reset password",
-    requestReset: "Send reset link",
-    confirmReset: "Set new password",
-    verifyEmail: "Verify email",
-    oauthNotConfigured: "OAuth is not configured",
-    emailNotConfigured: "Email provider is not configured",
-    homeCtaHonest:
-      "You can register and manage your profile. Search and bookings come later.",
-  },
-  nl: {
-    brand: "TravelAI",
+  }),
+  nl: localize(it, {
     heroTitle: "Jouw reis. Georganiseerd door AI.",
-    heroSubtitle:
-      "Platform in opbouw: authenticatie en database zijn actief in deze fase.",
-    notAvailableYet:
-      "Vlucht-/hotelszoeken en AI-assistent zijn nog niet beschikbaar. Geen verzonnen aanbiedingen.",
+    heroSubtitle: "Zoek, vergelijk en organiseer vluchten, hotels en auto's op één plek.",
+    tabFlights: "Vluchten",
+    tabHotels: "Hotels",
+    tabCars: "Auto's",
     login: "Inloggen",
     register: "Registreren",
     profile: "Profiel",
-    logout: "Uitloggen",
-    email: "E-mail",
-    password: "Wachtwoord",
-    name: "Naam",
-    submitLogin: "Inloggen",
-    submitRegister: "Account maken",
-    updateProfile: "Profiel opslaan",
-    resetPassword: "Wachtwoord resetten",
-    requestReset: "Resetlink versturen",
-    confirmReset: "Nieuw wachtwoord instellen",
-    verifyEmail: "E-mail verifiëren",
-    oauthNotConfigured: "OAuth is niet geconfigureerd",
-    emailNotConfigured: "E-mailprovider is niet geconfigureerd",
-    homeCtaHonest:
-      "Je kunt je registreren en je profiel beheren. Zoeken en boeken komen later.",
-  },
-  de: {
-    brand: "TravelAI",
+  }),
+  de: localize(it, {
     heroTitle: "Deine Reise. Organisiert von der KI.",
-    heroSubtitle:
-      "Plattform im Aufbau: Authentifizierung und Datenbank sind in dieser Phase aktiv.",
-    notAvailableYet:
-      "Flug-/Hotelsuche und KI-Assistent sind noch nicht verfügbar. Keine erfundenen Angebote.",
+    heroSubtitle: "Suche, vergleiche und organisiere Flüge, Hotels und Autos an einem Ort.",
+    tabFlights: "Flüge",
+    tabHotels: "Hotels",
+    tabCars: "Autos",
     login: "Anmelden",
     register: "Registrieren",
     profile: "Profil",
-    logout: "Abmelden",
-    email: "E-Mail",
-    password: "Passwort",
-    name: "Name",
-    submitLogin: "Anmelden",
-    submitRegister: "Konto erstellen",
-    updateProfile: "Profil speichern",
-    resetPassword: "Passwort zurücksetzen",
-    requestReset: "Reset-Link senden",
-    confirmReset: "Neues Passwort festlegen",
-    verifyEmail: "E-Mail bestätigen",
-    oauthNotConfigured: "OAuth ist nicht konfiguriert",
-    emailNotConfigured: "E-Mail-Anbieter ist nicht konfiguriert",
-    homeCtaHonest:
-      "Du kannst dich registrieren und dein Profil verwalten. Suche und Buchungen folgen später.",
-  },
-  fr: {
-    brand: "TravelAI",
-    heroTitle: "Votre voyage. Organisé par l’IA.",
-    heroSubtitle:
-      "Plateforme en construction : authentification et base de données actives à cette phase.",
-    notAvailableYet:
-      "Recherche vols/hôtels et assistant IA pas encore disponibles. Aucune offre inventée.",
+  }),
+  fr: localize(it, {
+    heroTitle: "Votre voyage. Organisé par l'IA.",
+    heroSubtitle: "Cherchez, comparez et organisez vols, hôtels et voitures en un seul endroit.",
+    tabFlights: "Vols",
+    tabHotels: "Hôtels",
+    tabCars: "Voitures",
     login: "Connexion",
     register: "Inscription",
     profile: "Profil",
-    logout: "Déconnexion",
-    email: "E-mail",
-    password: "Mot de passe",
-    name: "Nom",
-    submitLogin: "Se connecter",
-    submitRegister: "Créer un compte",
-    updateProfile: "Enregistrer le profil",
-    resetPassword: "Réinitialiser le mot de passe",
-    requestReset: "Envoyer le lien",
-    confirmReset: "Définir le nouveau mot de passe",
-    verifyEmail: "Vérifier l’e-mail",
-    oauthNotConfigured: "OAuth non configuré",
-    emailNotConfigured: "Fournisseur e-mail non configuré",
-    homeCtaHonest:
-      "Vous pouvez vous inscrire et gérer votre profil. Recherche et réservations viendront plus tard.",
-  },
-  es: {
-    brand: "TravelAI",
+  }),
+  es: localize(it, {
     heroTitle: "Tu viaje. Organizado por la IA.",
-    heroSubtitle:
-      "Plataforma en construcción: autenticación y base de datos activas en esta fase.",
-    notAvailableYet:
-      "Búsqueda de vuelos/hoteles y asistente IA aún no disponibles. Sin ofertas inventadas.",
+    heroSubtitle: "Busca, compara y organiza vuelos, hoteles y coches en un solo lugar.",
+    tabFlights: "Vuelos",
+    tabHotels: "Hoteles",
+    tabCars: "Coches",
     login: "Iniciar sesión",
     register: "Registrarse",
     profile: "Perfil",
-    logout: "Cerrar sesión",
-    email: "Correo",
-    password: "Contraseña",
-    name: "Nombre",
-    submitLogin: "Entrar",
-    submitRegister: "Crear cuenta",
-    updateProfile: "Guardar perfil",
-    resetPassword: "Restablecer contraseña",
-    requestReset: "Enviar enlace",
-    confirmReset: "Establecer nueva contraseña",
-    verifyEmail: "Verificar correo",
-    oauthNotConfigured: "OAuth no configurado",
-    emailNotConfigured: "Proveedor de correo no configurado",
-    homeCtaHonest:
-      "Puedes registrarte y gestionar tu perfil. La búsqueda y las reservas llegarán después.",
-  },
+  }),
 };
 
 export function isLocale(value: string): value is Locale {

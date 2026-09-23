@@ -14,9 +14,18 @@ const display = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "TravelAI",
+  title: {
+    default: "TravelAI",
+    template: "%s | TravelAI",
+  },
   description:
-    "TravelAI — autenticazione e database (Fase 2). Ricerca e AI non ancora disponibili.",
+    "TravelAI — cerca, confronta e organizza voli, hotel e auto. Solo dati da provider configurati.",
+  openGraph: {
+    title: "TravelAI",
+    description:
+      "Il tuo viaggio. Organizzato dall'AI. Nessuna offerta inventata.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

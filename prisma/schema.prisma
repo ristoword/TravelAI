@@ -103,6 +103,7 @@ model User {
   auditLogs             AuditLog[]
   passwordResetTokens   PasswordResetToken[]
   emailVerificationTokens EmailVerificationToken[]
+  comparisons           Comparison[]
 
   @@index([role])
   @@index([deletedAt])
@@ -270,12 +271,83 @@ model FlightSearch {
   @@index([deletedAt])
 }
 
-model FlightOffer {
-  id             String   @id @default(uuid())
-  flightSearchId String
+model Flight {
+  id             String    @id @default(uuid())
   providerId     String?
   externalId     String?
   airline        String?
+  airlineLogoUrl String?
+  flightNumber   String?
+  origin         String?
+  destination    String?
+  departAt       DateTime?
+  arriveAt       DateTime?
+  durationMinutes Int?
+  stops          Int?
+  cabinClass     String?
+  baggage        String?
+  conditions     String?
+  currency       String    @default("EUR")
+  rawPayload     Json?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  provider Provider?       @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  segments FlightSegment[]
+  offers   FlightOffer[]
+
+  @@index([providerId])
+  @@index([externalId])
+  @@index([deletedAt])
+}
+
+model FlightSegment {
+  id              String    @id @default(uuid())
+  flightId        String?
+  flightOfferId   String?
+  segmentOrder    Int       @default(0)
+  airline         String?
+  flightNumber    String?
+  origin          String?
+  destination     String?
+  departAt        DateTime?
+  arriveAt        DateTime?
+  durationMinutes Int?
+  originLat       Decimal?  @db.Decimal(10, 7)
+  originLng       Decimal?  @db.Decimal(10, 7)
+  destLat         Decimal?  @db.Decimal(10, 7)
+  destLng         Decimal?  @db.Decimal(10, 7)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  flight      Flight?      @relation(fields: [flightId], references: [id], onDelete: Cascade)
+  flightOffer FlightOffer? @relation(fields: [flightOfferId], references: [id], onDelete: Cascade)
+
+  @@index([flightId])
+  @@index([flightOfferId])
+  @@index([deletedAt])
+}
+
+model FlightOffer {
+  id             String   @id @default(uuid())
+  flightSearchId String
+  flightId       String?
+  providerId     String?
+  externalId     String?
+  airline        String?
+  airlineLogoUrl String?
+  flightNumber   String?
+  origin         String?
+  destination    String?
+  departAt       DateTime?
+  arriveAt       DateTime?
+  durationMinutes Int?
+  stops          Int?
+  cabinClass     String?
+  baggage        String?
+  conditions     String?
   priceAmount    Decimal  @db.Decimal(12, 2)
   currency       String   @default("EUR")
   rawPayload     Json?
@@ -285,10 +357,13 @@ model FlightOffer {
   deletedAt      DateTime?
 
   flightSearch FlightSearch    @relation(fields: [flightSearchId], references: [id], onDelete: Cascade)
+  flight       Flight?         @relation(fields: [flightId], references: [id], onDelete: SetNull)
   provider     Provider?       @relation(fields: [providerId], references: [id], onDelete: SetNull)
   bookings     FlightBooking[]
+  segments     FlightSegment[]
 
   @@index([flightSearchId])
+  @@index([flightId])
   @@index([providerId])
   @@index([deletedAt])
 }
@@ -341,12 +416,113 @@ model HotelSearch {
   @@index([deletedAt])
 }
 
+model Hotel {
+  id                 String    @id @default(uuid())
+  providerId         String?
+  externalId         String?
+  name               String
+  starRating         Int?
+  guestRating        Decimal?  @db.Decimal(3, 1)
+  reviewCount        Int?
+  address            String?
+  city               String?
+  country            String?
+  latitude           Decimal?  @db.Decimal(10, 7)
+  longitude          Decimal?  @db.Decimal(10, 7)
+  distanceKm         Decimal?  @db.Decimal(8, 2)
+  description        String?   @db.Text
+  cancellationPolicy String?   @db.Text
+  conditions         String?   @db.Text
+  currency           String    @default("EUR")
+  rawPayload         Json?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
+
+  provider  Provider?       @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  images    HotelImage[]
+  amenities HotelAmenity[]
+  rooms     HotelRoom[]
+  offers    HotelOffer[]
+
+  @@index([providerId])
+  @@index([externalId])
+  @@index([city])
+  @@index([deletedAt])
+}
+
+model HotelImage {
+  id        String    @id @default(uuid())
+  hotelId   String
+  url       String
+  alt       String?
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  hotel Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@index([hotelId])
+  @@index([deletedAt])
+}
+
+model HotelAmenity {
+  id        String    @id @default(uuid())
+  hotelId   String
+  code      String
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  hotel Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@unique([hotelId, code])
+  @@index([hotelId])
+  @@index([deletedAt])
+}
+
+model HotelRoom {
+  id                 String    @id @default(uuid())
+  hotelId            String
+  externalId         String?
+  name               String
+  description        String?   @db.Text
+  maxOccupancy       Int?
+  bedType            String?
+  priceAmount        Decimal?  @db.Decimal(12, 2)
+  currency           String    @default("EUR")
+  available          Boolean?
+  cancellationPolicy String?   @db.Text
+  rawPayload         Json?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
+
+  hotel Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@index([hotelId])
+  @@index([deletedAt])
+}
+
 model HotelOffer {
   id            String    @id @default(uuid())
   hotelSearchId String
+  hotelId       String?
   providerId    String?
   externalId    String?
   hotelName     String?
+  imageUrl      String?
+  starRating    Int?
+  guestRating   Decimal?  @db.Decimal(3, 1)
+  reviewCount   Int?
+  address       String?
+  city          String?
+  latitude      Decimal?  @db.Decimal(10, 7)
+  longitude     Decimal?  @db.Decimal(10, 7)
+  distanceKm    Decimal?  @db.Decimal(8, 2)
+  amenitiesJson Json?
   priceAmount   Decimal   @db.Decimal(12, 2)
   currency      String    @default("EUR")
   rawPayload    Json?
@@ -356,10 +532,12 @@ model HotelOffer {
   deletedAt     DateTime?
 
   hotelSearch HotelSearch    @relation(fields: [hotelSearchId], references: [id], onDelete: Cascade)
+  hotel       Hotel?         @relation(fields: [hotelId], references: [id], onDelete: SetNull)
   provider    Provider?      @relation(fields: [providerId], references: [id], onDelete: SetNull)
   bookings    HotelBooking[]
 
   @@index([hotelSearchId])
+  @@index([hotelId])
   @@index([providerId])
   @@index([deletedAt])
 }
@@ -411,25 +589,64 @@ model CarSearch {
   @@index([deletedAt])
 }
 
+model CarRental {
+  id           String    @id @default(uuid())
+  providerId   String?
+  externalId   String?
+  vendorName   String?
+  vehicleName  String?
+  category     String?
+  transmission String?
+  seats        Int?
+  bags         Int?
+  fuelType     String?
+  imageUrl     String?
+  pickupLat    Decimal?  @db.Decimal(10, 7)
+  pickupLng    Decimal?  @db.Decimal(10, 7)
+  conditions   String?   @db.Text
+  currency     String    @default("EUR")
+  rawPayload   Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  provider Provider?  @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  offers   CarOffer[]
+
+  @@index([providerId])
+  @@index([externalId])
+  @@index([deletedAt])
+}
+
 model CarOffer {
-  id          String    @id @default(uuid())
-  carSearchId String
-  providerId  String?
-  externalId  String?
-  vendorName  String?
-  priceAmount Decimal   @db.Decimal(12, 2)
-  currency    String    @default("EUR")
-  rawPayload  Json?
-  expiresAt   DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
+  id           String    @id @default(uuid())
+  carSearchId  String
+  carRentalId  String?
+  providerId   String?
+  externalId   String?
+  vendorName   String?
+  vehicleName  String?
+  category     String?
+  transmission String?
+  seats        Int?
+  bags         Int?
+  fuelType     String?
+  imageUrl     String?
+  priceAmount  Decimal   @db.Decimal(12, 2)
+  currency     String    @default("EUR")
+  rawPayload   Json?
+  expiresAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
 
   carSearch CarSearch    @relation(fields: [carSearchId], references: [id], onDelete: Cascade)
+  carRental CarRental?   @relation(fields: [carRentalId], references: [id], onDelete: SetNull)
   provider  Provider?    @relation(fields: [providerId], references: [id], onDelete: SetNull)
   bookings  CarBooking[]
 
   @@index([carSearchId])
+  @@index([carRentalId])
   @@index([providerId])
   @@index([deletedAt])
 }
@@ -535,6 +752,8 @@ model TripItem {
   title             String
   notes             String?
   sortOrder         Int          @default(0)
+  /// User selection snapshot (draft OK). Must never contain invented provider offers.
+  draftPayload      Json?
   flightBookingId   String?
   hotelBookingId    String?
   carBookingId      String?
@@ -552,6 +771,46 @@ model TripItem {
 
   @@index([tripId])
   @@index([type])
+  @@index([deletedAt])
+}
+
+model Comparison {
+  id        String    @id @default(uuid())
+  userId    String?
+  kind      String    @default("HOTEL")
+  title     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user  User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items ComparisonItem[]
+
+  @@index([userId])
+  @@index([kind])
+  @@index([deletedAt])
+}
+
+model ComparisonItem {
+  id            String    @id @default(uuid())
+  comparisonId  String
+  hotelId       String?
+  flightId      String?
+  carRentalId   String?
+  externalId    String?
+  sortOrder     Int       @default(0)
+  /// Only fields present from the provider; missing fields stay absent (UI: "non disponibile").
+  snapshot      Json?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  comparison Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+
+  @@index([comparisonId])
+  @@index([hotelId])
+  @@index([flightId])
+  @@index([carRentalId])
   @@index([deletedAt])
 }
 
@@ -672,6 +931,9 @@ model Provider {
 
   requests         ProviderRequest[]
   responses        ProviderResponse[]
+  flights          Flight[]
+  hotels           Hotel[]
+  carRentals       CarRental[]
   flightOffers     FlightOffer[]
   hotelOffers      HotelOffer[]
   carOffers        CarOffer[]
