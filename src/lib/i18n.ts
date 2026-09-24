@@ -98,6 +98,10 @@ type Messages = {
   sortPriceAsc: string;
   sortPriceDesc: string;
   sortDuration: string;
+  inspirationEyebrow: string;
+  inspirationTitle: string;
+  inspirationSubtitle: string;
+  inspirationExplore: string;
 };
 
 const it: Messages = {
@@ -203,6 +207,11 @@ const it: Messages = {
   sortPriceAsc: "Prezzo ↑",
   sortPriceDesc: "Prezzo ↓",
   sortDuration: "Durata",
+  inspirationEyebrow: "Ispirazione",
+  inspirationTitle: "Dove ti porta il viaggio",
+  inspirationSubtitle:
+    "Idee visive per iniziare — apri la ricerca corrispondente, senza offerte inventate.",
+  inspirationExplore: "Esplora",
 };
 
 function localize(base: Messages, overrides: Partial<Messages>): Messages {
@@ -242,6 +251,11 @@ const catalog: Record<Locale, Messages> = {
     searchingFlights: "Searching flights…",
     searchingHotels: "Searching hotels…",
     searchingCars: "Searching rental cars…",
+    inspirationEyebrow: "Inspiration",
+    inspirationTitle: "Where the trip can take you",
+    inspirationSubtitle:
+      "Visual ideas to get started — open the matching search, with no invented offers.",
+    inspirationExplore: "Explore",
     login: "Log in",
     register: "Sign up",
     profile: "Profile",

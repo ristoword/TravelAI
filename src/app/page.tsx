@@ -1,8 +1,10 @@
+import { Suspense } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SearchTabs } from "@/components/SearchTabs";
 import { AiPromptSection } from "@/components/AiPromptSection";
 import { HeroBackdrop } from "@/components/HeroBackdrop";
 import { TravelAiCards } from "@/components/TravelAiCards";
+import { VacanzeInspiration } from "@/components/VacanzeInspiration";
 import { IconCar, IconHotel, IconPlane } from "@/components/ui";
 import { isStripeConfigured } from "@/lib/stripe";
 import { t } from "@/lib/i18n";
@@ -161,14 +163,18 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="relative z-20 -mt-6 px-4 pb-6 sm:-mt-8 sm:px-8">
+      <section className="relative z-20 -mt-6 px-4 pb-4 sm:-mt-8 sm:px-8 sm:pb-5">
         <div className="mx-auto max-w-5xl">
-          <SearchTabs />
+          <Suspense fallback={<div className="min-h-[280px] rounded-2xl bg-white/80" aria-hidden />}>
+            <SearchTabs />
+          </Suspense>
           <p className="mt-3 max-w-2xl text-xs leading-relaxed text-[var(--muted)]">
             {m.homeCtaHonest}
           </p>
         </div>
       </section>
+
+      <VacanzeInspiration />
 
       <AiPromptSection />
     </main>

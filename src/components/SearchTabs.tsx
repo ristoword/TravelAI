@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { type ReactNode } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AirportInput } from "@/components/AirportInput";
 import {
   IconCar,
@@ -17,12 +17,28 @@ import { t } from "@/lib/i18n";
 
 type Tab = "flights" | "package" | "hotels" | "cars";
 
+const VALID_TABS: readonly Tab[] = ["flights", "package", "hotels", "cars"];
+
+function parseTab(value: string | null): Tab | null {
+  if (!value) return null;
+  return VALID_TABS.includes(value as Tab) ? (value as Tab) : null;
+}
+
 export function SearchTabs() {
   const m = t("it");
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>("flights");
+  const searchParams = useSearchParams();
+  const tab = parseTab(searchParams.get("tab")) ?? "flights";
   const baseId = "search-tabs";
   const airportHint = m.autocompleteNotConfigured;
+
+  function selectTab(next: Tab) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (next === "flights") params.delete("tab");
+    else params.set("tab", next);
+    const qs = params.toString();
+    router.replace(qs ? `/?${qs}` : "/", { scroll: false });
+  }
 
   const tabs: { id: Tab; label: string; icon: ReactNode }[] = [
     { id: "flights", label: m.tabFlights, icon: <IconPlane /> },
@@ -38,7 +54,8 @@ export function SearchTabs() {
 
   return (
     <section
-      className={`${cardClass} p-4 backdrop-blur-md sm:p-6`}
+      id="ricerca-viaggio"
+      className={`${cardClass} scroll-mt-24 p-4 backdrop-blur-md sm:p-6`}
       aria-label="Ricerca viaggio"
     >
       <div
@@ -61,7 +78,7 @@ export function SearchTabs() {
                   ? "bg-[var(--accent)] text-white shadow-[0_10px_24px_-12px_rgba(0,102,179,0.8)]"
                   : "bg-[var(--accent-soft)] text-[var(--accent)] hover:bg-[rgba(0,102,179,0.16)]"
               }`}
-              onClick={() => setTab(item.id)}
+              onClick={() => selectTab(item.id)}
             >
               {item.icon}
               <span>{item.label}</span>
