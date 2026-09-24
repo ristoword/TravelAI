@@ -59,11 +59,6 @@ export function AiPromptSection() {
             <h2 className="font-display text-2xl text-[var(--ink)] sm:text-3xl md:text-4xl">
               {m.tellWhere}
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--ink-soft)]">
-              Assistente AI con tool reali (searchFlights, searchHotels, searchCars…).
-              Senza OPENAI_API_KEY non simula risposte. Se un provider non è configurato,
-              lo dice chiaramente — zero prezzi inventati.
-            </p>
           </div>
         </div>
 
