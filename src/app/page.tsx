@@ -2,6 +2,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SearchTabs } from "@/components/SearchTabs";
 import { AiPromptSection } from "@/components/AiPromptSection";
 import { HeroBackdrop } from "@/components/HeroBackdrop";
+import { TravelAiCards } from "@/components/TravelAiCards";
 import { IconCar, IconHotel, IconPlane } from "@/components/ui";
 import { isStripeConfigured } from "@/lib/stripe";
 import { t } from "@/lib/i18n";
@@ -107,20 +108,26 @@ export default async function HomePage() {
     <main className="relative flex min-h-full flex-1 flex-col bg-[#f4f7fb]">
       <SiteHeader />
 
-      <section className="relative isolate min-h-[min(88vh,720px)] overflow-hidden text-white">
+      <section className="relative isolate min-h-[min(92vh,820px)] overflow-hidden text-white">
         <HeroBackdrop />
 
-        <div className="relative z-10 mx-auto flex min-h-[min(88vh,720px)] max-w-6xl flex-col justify-end px-4 pb-8 pt-10 sm:px-8 sm:pb-10 sm:pt-14">
-          <div className="max-w-2xl">
-            <p className="animate-fade-up text-[11px] font-semibold uppercase tracking-[0.22em] text-white/80">
-              {m.brand}
-            </p>
-            <h1 className="animate-fade-up mt-3 font-display text-[clamp(2rem,6vw,3.75rem)] leading-[1.05] tracking-tight">
-              {m.heroTitle}
-            </h1>
-            <p className="animate-fade-up-delay mt-4 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
-              {m.heroSubtitle}
-            </p>
+        <div className="relative z-10 mx-auto flex min-h-[min(92vh,820px)] max-w-6xl flex-col justify-end px-4 pb-8 pt-10 sm:px-8 sm:pb-10 sm:pt-14">
+          <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)] lg:gap-6">
+            <div className="max-w-2xl">
+              <p className="animate-fade-up text-[11px] font-semibold uppercase tracking-[0.22em] text-white/80">
+                {m.brand}
+              </p>
+              <h1 className="animate-fade-up mt-3 font-display text-[clamp(2rem,6vw,3.75rem)] leading-[1.05] tracking-tight">
+                {m.heroTitle}
+              </h1>
+              <p className="animate-fade-up-delay mt-4 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
+                {m.heroSubtitle}
+              </p>
+            </div>
+
+            <div className="animate-fade-up-delay flex justify-center lg:justify-end lg:pb-2">
+              <TravelAiCards />
+            </div>
           </div>
 
           <ul className="animate-fade-up-delay mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
