@@ -1,8 +1,10 @@
 "use client";
 
 import { type ReactNode } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AirportInput } from "@/components/AirportInput";
+import { LastMinuteBanner } from "@/components/LastMinuteBanner";
 import {
   IconCar,
   IconHotel,
@@ -58,33 +60,46 @@ export function SearchTabs() {
       className={`${cardClass} scroll-mt-24 p-4 backdrop-blur-md sm:p-6`}
       aria-label="Ricerca viaggio"
     >
-      <div
-        role="tablist"
-        aria-label="Tipo di ricerca"
-        className="mb-6 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {tabs.map((item) => {
-          const selected = tab === item.id;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              id={`${baseId}-${item.id}`}
-              aria-selected={selected}
-              aria-controls={`${baseId}-panel`}
-              className={`tab-pill inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:px-4 ${
-                selected
-                  ? "bg-[var(--accent)] text-white shadow-[0_10px_24px_-12px_rgba(0,102,179,0.8)]"
-                  : "bg-[var(--accent-soft)] text-[var(--accent)] hover:bg-[rgba(0,102,179,0.16)]"
-              }`}
-              onClick={() => selectTab(item.id)}
-            >
-              {item.icon}
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
+      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-3">
+        <div
+          role="tablist"
+          aria-label="Tipo di ricerca"
+          className="flex min-w-0 gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:shrink-0 [&::-webkit-scrollbar]:hidden"
+        >
+          {tabs.map((item) => {
+            const selected = tab === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                id={`${baseId}-${item.id}`}
+                aria-selected={selected}
+                aria-controls={`${baseId}-panel`}
+                className={`tab-pill inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:px-4 ${
+                  selected
+                    ? "bg-[var(--accent)] text-white shadow-[0_10px_24px_-12px_rgba(0,102,179,0.8)]"
+                    : "bg-[var(--accent-soft)] text-[var(--accent)] hover:bg-[rgba(0,102,179,0.16)]"
+                }`}
+                onClick={() => selectTab(item.id)}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+          <Link
+            href="/pacchetti"
+            className="tab-pill inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl bg-[var(--accent-soft)] px-3.5 py-2.5 text-sm font-semibold text-[var(--accent)] hover:bg-[rgba(0,102,179,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:px-4"
+          >
+            <IconPackage />
+            <span>{m.packagesHolidayCta}</span>
+          </Link>
+        </div>
+        <LastMinuteBanner
+          label={m.lastMinuteLabel}
+          className="min-w-0 flex-1 sm:max-w-none"
+        />
       </div>
 
       <div role="tabpanel" id={`${baseId}-panel`} aria-labelledby={`${baseId}-${tab}`}>

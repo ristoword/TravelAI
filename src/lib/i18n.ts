@@ -102,6 +102,11 @@ type Messages = {
   inspirationTitle: string;
   inspirationSubtitle: string;
   inspirationExplore: string;
+  packagesHolidayCta: string;
+  packagesHolidayTitle: string;
+  weeklyOffersTitle: string;
+  lastMinuteLabel: string;
+  workInProgress: string;
 };
 
 const it: Messages = {
@@ -212,6 +217,11 @@ const it: Messages = {
   inspirationSubtitle:
     "Idee visive per iniziare — apri la ricerca corrispondente, senza offerte inventate.",
   inspirationExplore: "Esplora",
+  packagesHolidayCta: "Pacchetti vacanze",
+  packagesHolidayTitle: "Pacchetti vacanze",
+  weeklyOffersTitle: "Offerte della settimana",
+  lastMinuteLabel: "Last minute",
+  workInProgress: "Lavori in corso",
 };
 
 function localize(base: Messages, overrides: Partial<Messages>): Messages {
@@ -256,6 +266,11 @@ const catalog: Record<Locale, Messages> = {
     inspirationSubtitle:
       "Visual ideas to get started — open the matching search, with no invented offers.",
     inspirationExplore: "Explore",
+    packagesHolidayCta: "Holiday packages",
+    packagesHolidayTitle: "Holiday packages",
+    weeklyOffersTitle: "Offers of the week",
+    lastMinuteLabel: "Last minute",
+    workInProgress: "Work in progress",
     login: "Log in",
     register: "Sign up",
     profile: "Profile",
