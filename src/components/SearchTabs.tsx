@@ -58,8 +58,8 @@ export function SearchTabs() {
               aria-controls={`${baseId}-panel`}
               className={`tab-pill inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
                 selected
-                  ? "bg-[var(--accent)] text-white shadow-[0_10px_24px_-12px_rgba(13,92,99,0.8)]"
-                  : "bg-[var(--accent-soft)] text-[var(--accent)] hover:bg-[rgba(13,92,99,0.16)]"
+                  ? "bg-[var(--accent)] text-white shadow-[0_10px_24px_-12px_rgba(0,102,179,0.8)]"
+                  : "bg-[var(--accent-soft)] text-[var(--accent)] hover:bg-[rgba(0,102,179,0.16)]"
               }`}
               onClick={() => setTab(item.id)}
             >

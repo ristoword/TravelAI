@@ -12,7 +12,7 @@ export default async function TripsPage() {
   const session = await auth();
   return (
     <main className="min-h-full">
-      <SiteHeader signedIn={Boolean(session?.user)} />
+      <SiteHeader />
       <div className="mx-auto max-w-3xl px-5 py-8 sm:px-10">
         <h1 className="font-display text-3xl text-teal-950">I miei viaggi</h1>
         <p className="mt-1 text-sm text-stone-600">

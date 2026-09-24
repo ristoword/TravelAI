@@ -8,10 +8,29 @@ type Messages = {
   notAvailableYet: string;
   login: string;
   register: string;
+  loginRegister: string;
   profile: string;
   logout: string;
   home: string;
   searchTrip: string;
+  navFlights: string;
+  navHotels: string;
+  navCars: string;
+  navPackages: string;
+  navExperiences: string;
+  navSupport: string;
+  iconFlightsCopy: string;
+  iconHotelsCopy: string;
+  iconCarsCopy: string;
+  iconExperiencesCopy: string;
+  trustStripe: string;
+  trustStripePending: string;
+  trustTrips: string;
+  trustSupport: string;
+  experiencesIntro: string;
+  supportIntro: string;
+  supportContactLabel: string;
+  supportComingSoon: string;
   email: string;
   password: string;
   name: string;
@@ -85,15 +104,36 @@ const it: Messages = {
   brand: "TravelAI",
   heroTitle: "Il tuo viaggio. Organizzato dall'AI.",
   heroSubtitle:
-    "Cerca, confronta e organizza voli, hotel e auto in un unico posto.",
+    "Cerca, confronta e organizza voli, hotel e auto in un unico posto — con risultati solo da provider configurati.",
   notAvailableYet:
     "I risultati di ricerca arrivano solo da provider configurati. Nessuna offerta inventata.",
   login: "Accedi",
   register: "Registrati",
+  loginRegister: "Accedi / Registrati",
   profile: "Profilo",
   logout: "Esci",
   home: "Home",
   searchTrip: "Cerca viaggio",
+  navFlights: "Voli",
+  navHotels: "Hotel",
+  navCars: "Auto",
+  navPackages: "Pacchetti",
+  navExperiences: "Esperienze",
+  navSupport: "Assistenza",
+  iconFlightsCopy: "Cerca rotte ovunque i provider sono attivi",
+  iconHotelsCopy: "Prenota quando il catalogo è configurato",
+  iconCarsCopy: "Noleggio con libertà di movimento",
+  iconExperiencesCopy: "Attività in arrivo — nessun catalogo finto",
+  trustStripe: "Checkout sicuro con Stripe",
+  trustStripePending: "Pagamenti Stripe quando configurati",
+  trustTrips: "Controllo spese nei tuoi viaggi salvati",
+  trustSupport: "Assistenza chiara, senza ticket inventati",
+  experiencesIntro:
+    "Le esperienze e le attività arriveranno quando un provider sarà collegato. Finché non lo è, non mostriamo cataloghi o prezzi inventati.",
+  supportIntro:
+    "Hai bisogno di aiuto su account, prenotazioni o pagamenti? Contattaci quando un canale è configurato.",
+  supportContactLabel: "Scrivi a",
+  supportComingSoon: "Assistenza in arrivo — nessun ticket finto per ora.",
   email: "Email",
   password: "Password",
   name: "Nome",

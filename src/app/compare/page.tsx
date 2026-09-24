@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { auth } from "@/auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { CompareClient } from "@/components/CompareClient";
 
@@ -13,7 +12,6 @@ type Props = {
 };
 
 export default async function ComparePage({ searchParams }: Props) {
-  const session = await auth();
   const sp = await searchParams;
   const raw = Array.isArray(sp.ids) ? sp.ids.join(",") : sp.ids ?? "";
   const ids = raw
@@ -23,7 +21,7 @@ export default async function ComparePage({ searchParams }: Props) {
 
   return (
     <main className="min-h-full">
-      <SiteHeader signedIn={Boolean(session?.user)} />
+      <SiteHeader />
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-10">
         <h1 className="font-display text-3xl text-teal-950">Confronta hotel</h1>
         <p className="mt-1 text-sm text-stone-600">

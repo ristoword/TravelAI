@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { auth } from "@/auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { BookingClient } from "@/components/BookingClient";
 
@@ -17,7 +16,6 @@ function one(v: string | string[] | undefined): string {
 }
 
 export default async function BookPage({ searchParams }: Props) {
-  const session = await auth();
   const sp = await searchParams;
   const kindRaw = one(sp.kind);
   const kind =
@@ -31,7 +29,7 @@ export default async function BookPage({ searchParams }: Props) {
 
   return (
     <main className="min-h-full">
-      <SiteHeader signedIn={Boolean(session?.user)} />
+      <SiteHeader />
       <div className="mx-auto max-w-3xl px-5 py-10 sm:px-10">
         {!kind || !externalId ? (
           <p className="text-sm text-stone-600">

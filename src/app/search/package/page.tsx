@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { auth } from "@/auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { PackageResultsClient } from "@/components/PackageResultsClient";
 
@@ -21,7 +20,6 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 }
 
 export default async function PackageSearchPage({ searchParams }: Props) {
-  const session = await auth();
   const sp = await searchParams;
   const origin = one(sp.origin);
   const destination = one(sp.destination);
@@ -30,7 +28,7 @@ export default async function PackageSearchPage({ searchParams }: Props) {
 
   return (
     <main className="min-h-full">
-      <SiteHeader signedIn={Boolean(session?.user)} />
+      <SiteHeader />
       <div className="mx-auto max-w-4xl px-5 py-8 sm:px-10">
         <h1 className="font-display text-3xl text-teal-950">Volo + Hotel</h1>
         <p className="mt-1 text-sm text-stone-600">

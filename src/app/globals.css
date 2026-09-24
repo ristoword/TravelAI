@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --bg-a: #e8f1f4;
-  --bg-b: #f4f7f8;
-  --bg-c: #d5e6ea;
-  --surface: rgba(255, 255, 255, 0.88);
-  --ink: #0f1c22;
-  --ink-soft: #3d525c;
-  --muted: #7a8f99;
-  --line: rgba(15, 45, 55, 0.12);
-  --accent: #0d5c63;
-  --accent-hover: #0a4a50;
-  --accent-soft: rgba(13, 92, 99, 0.1);
+  --bg-a: #eef4fb;
+  --bg-b: #f4f7fb;
+  --bg-c: #e2ebf5;
+  --surface: rgba(255, 255, 255, 0.92);
+  --ink: #0b1f33;
+  --ink-soft: #3d5266;
+  --muted: #7a8fa3;
+  --line: rgba(15, 45, 70, 0.12);
+  --accent: #0066b3;
+  --accent-hover: #005298;
+  --accent-soft: rgba(0, 102, 179, 0.1);
   --warn-bg: #fff8eb;
   --warn-ink: #7a4e00;
-  --sand: #f4f7f8;
+  --sand: #f4f7fb;
 }
 
 @theme inline {
@@ -26,9 +26,9 @@
 
 body {
   background:
-    radial-gradient(ellipse 90% 55% at 8% -10%, #9ec8d0 0%, transparent 55%),
-    radial-gradient(ellipse 70% 45% at 100% 0%, #c5dce3 0%, transparent 50%),
-    radial-gradient(ellipse 50% 40% at 70% 100%, #dfecef 0%, transparent 45%),
+    radial-gradient(ellipse 90% 55% at 8% -10%, #b8d4f0 0%, transparent 55%),
+    radial-gradient(ellipse 70% 45% at 100% 0%, #d0e4f5 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 70% 100%, #e8f0f8 0%, transparent 45%),
     linear-gradient(165deg, var(--bg-a) 0%, var(--bg-b) 48%, var(--bg-c) 100%);
   background-attachment: fixed;
   color: var(--ink);
@@ -91,9 +91,9 @@ body {
   animation: soft-pulse 1.4s ease-in-out infinite;
   background: linear-gradient(
     90deg,
-    rgba(13, 92, 99, 0.08),
-    rgba(13, 92, 99, 0.14),
-    rgba(13, 92, 99, 0.08)
+    rgba(0, 102, 179, 0.08),
+    rgba(0, 102, 179, 0.14),
+    rgba(0, 102, 179, 0.08)
   );
   background-size: 200% 100%;
 }
@@ -107,8 +107,8 @@ body {
 
 .offer-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(13, 92, 99, 0.28);
-  box-shadow: 0 22px 48px -28px rgba(15, 45, 55, 0.5);
+  border-color: rgba(0, 102, 179, 0.28);
+  box-shadow: 0 22px 48px -28px rgba(15, 45, 70, 0.5);
 }
 
 .tab-pill {
@@ -124,7 +124,7 @@ body {
 
 .bottom-sheet {
   border-radius: 1.25rem 1.25rem 0 0;
-  box-shadow: 0 -12px 40px rgba(15, 45, 55, 0.2);
+  box-shadow: 0 -12px 40px rgba(15, 45, 70, 0.2);
 }
 
 @media (prefers-reduced-motion: reduce) {
