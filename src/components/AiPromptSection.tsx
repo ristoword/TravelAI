@@ -49,14 +49,14 @@ export function AiPromptSection() {
   }
 
   return (
-    <section className="animate-fade-up-delay mx-auto max-w-3xl px-5 pb-24 sm:px-10">
-      <div className={`${cardClass} p-5 sm:p-7`}>
+    <section className="animate-fade-up-delay w-full min-w-0">
+      <div className={`${cardClass} p-4 sm:p-6 md:p-7`}>
         <div className="flex items-start gap-3">
           <span className="mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-soft)] text-[var(--accent)]">
             <IconSpark className="h-5 w-5" />
           </span>
-          <div>
-            <h2 className="font-display text-3xl text-[var(--ink)] sm:text-4xl">
+          <div className="min-w-0">
+            <h2 className="font-display text-2xl text-[var(--ink)] sm:text-3xl md:text-4xl">
               {m.tellWhere}
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-[var(--ink-soft)]">
@@ -79,7 +79,7 @@ export function AiPromptSection() {
               if (e.key === "Enter") void send();
             }}
             placeholder={m.tellWherePlaceholder}
-            className={`${fieldClass} flex-1`}
+            className={`${fieldClass} min-h-11 flex-1`}
             disabled={loading}
             aria-busy={loading}
           />
@@ -87,7 +87,7 @@ export function AiPromptSection() {
             type="button"
             onClick={() => void send()}
             disabled={loading}
-            className={`${btnPrimaryClass} sm:min-w-28`}
+            className={`${btnPrimaryClass} min-h-11 sm:min-w-28`}
           >
             {loading ? "…" : "Invia"}
           </button>

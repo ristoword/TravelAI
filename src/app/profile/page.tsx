@@ -14,7 +14,7 @@ export default async function ProfilePage() {
   return (
     <main className="min-h-full">
       <SiteHeader />
-      <div className="mx-auto flex w-full max-w-lg flex-col gap-6 px-5 py-8 sm:px-10">
+      <div className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-8 sm:px-8">
         <h1 className="font-display text-3xl text-[var(--ink)]">{m.profile}</h1>
         <ProfileForm />
       </div>

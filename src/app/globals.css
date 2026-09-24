@@ -33,6 +33,7 @@ body {
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
 }
 
 .font-display {

@@ -2,7 +2,7 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 /** Shared premium OTA surface classes — no fake data, visual only. */
 export const fieldClass =
-  "w-full rounded-xl border border-[var(--line)] bg-white px-3.5 py-3 text-sm text-[var(--ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] placeholder:text-[var(--muted)] transition focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/25";
+  "min-h-11 w-full rounded-xl border border-[var(--line)] bg-white px-3.5 py-3 text-sm text-[var(--ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] placeholder:text-[var(--muted)] transition focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/25";
 
 export const labelClass =
   "mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--ink-soft)]";
@@ -11,7 +11,7 @@ export const cardClass =
   "rounded-2xl border border-[var(--line)] bg-[var(--surface)] shadow-[0_18px_50px_-28px_rgba(15,45,55,0.45)]";
 
 export const btnPrimaryClass =
-  "inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3 text-sm font-semibold tracking-wide text-white transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3 text-sm font-semibold tracking-wide text-white transition hover:bg-[var(--accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50";
 
 export const btnGhostClass =
   "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--line)] bg-white/80 px-4 py-2.5 text-sm font-medium text-[var(--ink)] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";

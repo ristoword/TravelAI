@@ -38,8 +38,8 @@ export default async function FlightSearchPage({ searchParams }: Props) {
   return (
     <main className="min-h-full">
       <SiteHeader />
-      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-10">
-        <h1 className="font-display text-3xl text-[var(--ink)]">Risultati voli</h1>
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-8 xl:max-w-7xl">
+        <h1 className="font-display text-2xl text-[var(--ink)] sm:text-3xl">Risultati voli</h1>
         <p className="mt-1 text-sm text-[var(--ink-soft)]">
           {origin || "?"} → {destination || "?"}
           {departDate ? ` · ${departDate}` : ""}

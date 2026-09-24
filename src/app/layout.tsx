@@ -35,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it" className={`${sans.variable} ${display.variable} h-full`}>
-      <body className="min-h-full font-sans text-stone-900 antialiased">
+      <body className="min-h-full overflow-x-hidden font-sans text-stone-900 antialiased">
         <Providers>{children}</Providers>
       </body>
     </html>

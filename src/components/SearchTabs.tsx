@@ -73,7 +73,7 @@ export function SearchTabs() {
               id={`${baseId}-${item.id}`}
               aria-selected={selected}
               aria-controls={`${baseId}-panel`}
-              className={`tab-pill inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
+              className={`tab-pill inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:px-4 ${
                 selected
                   ? "bg-[var(--accent)] text-white shadow-[0_10px_24px_-12px_rgba(0,102,179,0.8)]"
                   : "bg-[var(--accent-soft)] text-[var(--accent)] hover:bg-[rgba(0,102,179,0.16)]"
@@ -90,7 +90,7 @@ export function SearchTabs() {
       <div role="tabpanel" id={`${baseId}-panel`} aria-labelledby={`${baseId}-${tab}`}>
         {tab === "flights" && (
           <form
-            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4"
             onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
@@ -106,7 +106,7 @@ export function SearchTabs() {
               });
             }}
           >
-            <div className="sm:col-span-2 lg:col-span-4">
+            <div className="md:col-span-2 xl:col-span-4">
               <p className="text-xs text-[var(--muted)]" role="note">
                 {airportHint}
               </p>
@@ -188,25 +188,25 @@ export function SearchTabs() {
                 placeholder="Cabina / Stiva"
               />
             </div>
-            <fieldset className="sm:col-span-2">
+            <fieldset className="md:col-span-2">
               <legend className={labelClass}>Tipo viaggio</legend>
-              <div className="flex flex-wrap gap-4 text-sm text-[var(--ink-soft)]">
-                <label className="flex items-center gap-2">
+              <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-[var(--ink-soft)]">
+                <label className="inline-flex min-h-11 items-center gap-2">
                   <input type="radio" name="tripType" value="roundtrip" defaultChecked />
                   {m.roundTrip}
                 </label>
-                <label className="flex items-center gap-2">
+                <label className="inline-flex min-h-11 items-center gap-2">
                   <input type="radio" name="tripType" value="oneway" />
                   {m.oneWay}
                 </label>
-                <label className="flex items-center gap-2">
+                <label className="inline-flex min-h-11 items-center gap-2">
                   <input type="radio" name="tripType" value="multicity" />
                   {m.multiCity}
                 </label>
               </div>
             </fieldset>
-            <div className="flex items-end sm:col-span-2 lg:col-span-4">
-              <button type="submit" className={`${btnPrimaryClass} w-full sm:w-auto`}>
+            <div className="flex items-end md:col-span-2 xl:col-span-4">
+              <button type="submit" className={`${btnPrimaryClass} min-h-11 w-full sm:w-auto`}>
                 {m.searchFlights}
               </button>
             </div>
@@ -215,7 +215,7 @@ export function SearchTabs() {
 
         {tab === "package" && (
           <form
-            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3"
             onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
@@ -306,7 +306,7 @@ export function SearchTabs() {
                 <option value="business">Business</option>
               </select>
             </div>
-            <div className="sm:col-span-2">
+            <div className="md:col-span-2">
               <label className={labelClass} htmlFor={`${baseId}-p-prefs`}>
                 {m.hotelPrefs}
               </label>
@@ -317,8 +317,8 @@ export function SearchTabs() {
                 placeholder="Centro, colazione, piscina…"
               />
             </div>
-            <div className="flex items-end sm:col-span-2 lg:col-span-3">
-              <button type="submit" className={`${btnPrimaryClass} w-full sm:w-auto`}>
+            <div className="flex items-end md:col-span-2 xl:col-span-3">
+              <button type="submit" className={`${btnPrimaryClass} min-h-11 w-full sm:w-auto`}>
                 {m.searchPackage}
               </button>
             </div>
@@ -327,7 +327,7 @@ export function SearchTabs() {
 
         {tab === "hotels" && (
           <form
-            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4"
             onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
@@ -340,7 +340,7 @@ export function SearchTabs() {
               });
             }}
           >
-            <div className="sm:col-span-2">
+            <div className="md:col-span-2">
               <label className={labelClass} htmlFor={`${baseId}-h-dest`}>
                 {m.destination}
               </label>
@@ -401,8 +401,8 @@ export function SearchTabs() {
                 className={fieldClass}
               />
             </div>
-            <div className="flex items-end sm:col-span-2">
-              <button type="submit" className={`${btnPrimaryClass} w-full sm:w-auto`}>
+            <div className="flex items-end md:col-span-2">
+              <button type="submit" className={`${btnPrimaryClass} min-h-11 w-full sm:w-auto`}>
                 {m.searchHotels}
               </button>
             </div>
@@ -411,7 +411,7 @@ export function SearchTabs() {
 
         {tab === "cars" && (
           <form
-            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3"
             onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
@@ -504,8 +504,8 @@ export function SearchTabs() {
                 className={fieldClass}
               />
             </div>
-            <div className="flex items-end sm:col-span-2">
-              <button type="submit" className={`${btnPrimaryClass} w-full sm:w-auto`}>
+            <div className="flex items-end md:col-span-2">
+              <button type="submit" className={`${btnPrimaryClass} min-h-11 w-full sm:w-auto`}>
                 {m.searchCars}
               </button>
             </div>

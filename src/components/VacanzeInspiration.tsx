@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { t } from "@/lib/i18n";
 
 type InspirationItem = {
@@ -7,11 +8,11 @@ type InspirationItem = {
   title: string;
   alt: string;
   src: string;
-  /** Search tab to open on the homepage — no invented results. */
   tab: "flights" | "package" | "hotels" | "cars";
 };
 
-const items: InspirationItem[] = [
+/** Primary set — fits the marked horizontal band. */
+const stripItems: InspirationItem[] = [
   {
     id: "hotel",
     title: "Hotel",
@@ -40,19 +41,16 @@ const items: InspirationItem[] = [
     src: "/vacanze/resort.jpg",
     tab: "hotels",
   },
+];
+
+/** Side gutters (desktop) — only when the flanking zones have room. */
+const leftRailItems: InspirationItem[] = [
   {
     id: "mare",
     title: "Mare",
     alt: "Costa rocciosa sul mare azzurro in pomeriggio",
     src: "/vacanze/mare.jpg",
     tab: "package",
-  },
-  {
-    id: "citta",
-    title: "Città",
-    alt: "Skyline di una città storica all'ora blu",
-    src: "/vacanze/citta.jpg",
-    tab: "flights",
   },
   {
     id: "laghi",
@@ -63,74 +61,132 @@ const items: InspirationItem[] = [
   },
 ];
 
-export function VacanzeInspiration() {
+const rightRailItems: InspirationItem[] = [
+  {
+    id: "citta",
+    title: "Città",
+    alt: "Skyline di una città storica all'ora blu",
+    src: "/vacanze/citta.jpg",
+    tab: "flights",
+  },
+];
+
+function MiniCard({
+  item,
+  exploreLabel,
+  orientation = "horizontal",
+}: {
+  item: InspirationItem;
+  exploreLabel: string;
+  orientation?: "horizontal" | "vertical";
+}) {
+  const shell =
+    orientation === "vertical"
+      ? "w-full max-w-[7.25rem]"
+      : "w-[6.75rem] shrink-0 sm:w-[7.25rem]";
+
+  return (
+    <Link
+      href={`/?tab=${item.tab}#ricerca-viaggio`}
+      className={`group ${shell} rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]`}
+      aria-label={`${exploreLabel} ${item.title}`}
+    >
+      <div className="relative h-[72px] w-full overflow-hidden rounded-lg bg-[var(--accent-soft)] sm:h-[84px] xl:h-[96px]">
+        <Image
+          src={item.src}
+          alt={item.alt}
+          fill
+          sizes="116px"
+          className="object-cover transition duration-300 ease-out group-hover:scale-[1.04]"
+        />
+      </div>
+      <span className="mt-1 block truncate text-center text-[11px] font-semibold leading-tight text-[var(--ink)] sm:text-xs">
+        {item.title}
+      </span>
+    </Link>
+  );
+}
+
+function CardRail({
+  items,
+  exploreLabel,
+  label,
+}: {
+  items: InspirationItem[];
+  exploreLabel: string;
+  label: string;
+}) {
+  return (
+    <ul
+      className="flex flex-col items-center gap-2.5"
+      aria-label={label}
+    >
+      {items.map((item) => (
+        <li key={item.id} className="w-full">
+          <MiniCard item={item} exploreLabel={exploreLabel} orientation="vertical" />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * Small inspiration cards in the three annotated zones:
+ * 1) thin band under the search box
+ * 2–3) left/right gutters beside the AI block (lg+)
+ * Mobile: one compact horizontal scroll in the band only.
+ */
+export function VacanzeInspiration({ children }: { children: ReactNode }) {
   const m = t("it");
 
   return (
-    <section
-      className="relative z-10 px-4 pb-8 pt-2 sm:px-8 sm:pb-10"
-      aria-labelledby="vacanze-inspiration-heading"
-    >
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-5 flex flex-col gap-1 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
-              {m.inspirationEyebrow}
-            </p>
-            <h2
-              id="vacanze-inspiration-heading"
-              className="mt-1 font-display text-2xl tracking-tight text-[var(--ink)] sm:text-3xl"
-            >
-              {m.inspirationTitle}
-            </h2>
-            <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-[var(--muted)]">
-              {m.inspirationSubtitle}
-            </p>
-          </div>
+    <div className="relative z-10 w-full">
+      {/* Zone 1 — horizontal strip between search and AI */}
+      <section
+        className="px-4 pt-1 pb-3 sm:px-8 sm:pb-4"
+        aria-labelledby="vacanze-inspiration-heading"
+      >
+        <div className="mx-auto max-w-5xl">
+          <h2 id="vacanze-inspiration-heading" className="sr-only">
+            {m.inspirationTitle}
+          </h2>
+          <ul
+            className="flex gap-2.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:justify-center sm:gap-3 sm:overflow-visible [&::-webkit-scrollbar]:hidden"
+            aria-label={m.inspirationEyebrow}
+          >
+            {stripItems.map((item) => (
+              <li key={item.id}>
+                <MiniCard item={item} exploreLabel={m.inspirationExplore} />
+              </li>
+            ))}
+          </ul>
         </div>
+      </section>
 
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
-          {items.map((item, index) => (
-            <li
-              key={item.id}
-              className={
-                index === items.length - 1
-                  ? "col-span-2 sm:col-span-1 lg:col-span-1"
-                  : undefined
-              }
-            >
-              <Link
-                href={`/?tab=${item.tab}#ricerca-viaggio`}
-                className="group relative block overflow-hidden rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-                aria-label={`${m.inspirationExplore} ${item.title}`}
-              >
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--accent-soft)]">
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="object-cover transition duration-500 ease-out group-hover:scale-[1.04]"
-                    priority={index < 4}
-                  />
-                  <div
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0a1f38]/75 via-[#0a1f38]/15 to-transparent"
-                    aria-hidden
-                  />
-                  <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3 sm:p-3.5">
-                    <span className="font-display text-base font-semibold tracking-tight text-white sm:text-lg">
-                      {item.title}
-                    </span>
-                    <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/85 opacity-90 transition group-hover:opacity-100 sm:text-[11px]">
-                      {m.inspirationExplore}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+      {/* Zones 2–3 — side gutters flanking AI; strip-only below lg */}
+      <section className="px-4 pb-16 sm:px-8 sm:pb-24">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-4 lg:grid-cols-[6.75rem_minmax(0,1fr)_6.75rem] lg:gap-5 xl:max-w-7xl xl:grid-cols-[7.5rem_minmax(0,42rem)_7.5rem] xl:justify-center xl:gap-6 2xl:max-w-[90rem]">
+          <aside className="hidden lg:block lg:pt-1" aria-label="Ispirazione sinistra">
+            <CardRail
+              items={leftRailItems}
+              exploreLabel={m.inspirationExplore}
+              label="Idee viaggio a sinistra"
+            />
+          </aside>
+
+          <div className="min-w-0 w-full justify-self-center lg:max-w-3xl xl:max-w-none">
+            {children}
+          </div>
+
+          <aside className="hidden lg:block lg:pt-1" aria-label="Ispirazione destra">
+            <CardRail
+              items={rightRailItems}
+              exploreLabel={m.inspirationExplore}
+              label="Idee viaggio a destra"
+            />
+          </aside>
+        </div>
+      </section>
+    </div>
   );
 }

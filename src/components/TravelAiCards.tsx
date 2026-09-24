@@ -95,7 +95,7 @@ function TravelCard({
 
   return (
     <div
-      className={`travelai-card relative aspect-[1.586/1] w-[min(100%,280px)] overflow-hidden rounded-2xl border border-white/20 p-4 shadow-[0_28px_50px_-24px_rgba(8,24,48,0.85)] sm:w-[300px] sm:p-5 ${s.face} ${s.ink} ${className}`}
+      className={`travelai-card relative aspect-[1.586/1] w-[min(100%,220px)] overflow-hidden rounded-2xl border border-white/20 p-3.5 shadow-[0_28px_50px_-24px_rgba(8,24,48,0.85)] sm:w-[min(100%,280px)] sm:p-4 md:w-[300px] md:p-5 ${s.face} ${s.ink} ${className}`}
       aria-hidden={!showDetails}
     >
       <div
@@ -181,7 +181,7 @@ function TravelCard({
 export function TravelAiCards({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`travelai-card-stack relative mx-auto h-[220px] w-full max-w-[340px] sm:h-[260px] sm:max-w-[380px] ${className}`}
+      className={`travelai-card-stack relative mx-auto h-[168px] w-full max-w-[280px] sm:h-[220px] sm:max-w-[340px] md:h-[260px] md:max-w-[380px] ${className}`}
       role="img"
       aria-label="Illustrazione marketing di tre carte TravelAI stilizzate. Non è un prodotto di pagamento emesso."
     >
